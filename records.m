@@ -13,7 +13,7 @@ lati1=hurr10000.NYRSimHur(2).SimHur(1).Lat;
 long1=hurr10000.NYRSimHur(2).SimHur(1).Lon;
 plotm(lati1,long1,'or')
 %% exact wind speed records at a location
-latiLoc=lati1(23)-2.5;
+latiLoc=lati1(23)-1.4;
 longLoc=long1(23);
 arclenLoc = distance(lati1(23),long1(23),latiLoc,longLoc);
 rLoc=deg2km(arclenLoc);
@@ -55,9 +55,9 @@ plot(6*t(19:27),dir(19:27))
 ylabel('wind direction (rad)')
 ylim([0 2*pi])
 %save wind speed and direction records
-fileID=fopen('NYRSimHurV4_NE7_250km.txt','w');
+fileID=fopen('NYRSimHurV4_NE7_150km.txt','w');
 for i = 19:27
-    fprintf(fileID,'%7.4f\n',V(i));
+    fprintf(fileID,'%7.4f %7.4f\n',V(i),dir(i));
 end
 fclose(fileID);
 %%

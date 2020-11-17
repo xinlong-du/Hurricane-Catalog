@@ -1,5 +1,5 @@
 clear;clc;
-hurr10000=load('NYRSimHurV4_NE5.mat');
+hurr10000=load('NYRSimHurV4_NE7.mat');
 %% plot world map
 latlim = [10 70];
 lonlim = [-110 10];
@@ -13,8 +13,8 @@ lati1=hurr10000.NYRSimHur(2).SimHur(1).Lat;
 long1=hurr10000.NYRSimHur(2).SimHur(1).Lon;
 plotm(lati1,long1,'or')
 %% exact wind speed records at a location
-latiLoc=lati1(23);
-longLoc=long1(23)-1.5;
+latiLoc=lati1(23)-2.5;
+longLoc=long1(23);
 arclenLoc = distance(lati1(23),long1(23),latiLoc,longLoc);
 rLoc=deg2km(arclenLoc);
 theta=hurr10000.NYRSimHur(2).SimHur(1).HeadDir;
@@ -44,17 +44,22 @@ end
 figure
 %colororder({'b','m'})
 yyaxis left
-plot(6*t(13:33),V(13:33))
+plot(6*t(19:27),V(19:27))
 %plot(6*t(13:length(t)),V(13:length(t)))
 xlabel('time (h)')
 ylabel('wind speed (m/s)')
 ylim([0 70])
 yyaxis right
-plot(6*t(13:33),dir(13:33))
+plot(6*t(19:27),dir(19:27))
 %plot(6*t(13:length(t)),dir(13:length(t)))
 ylabel('wind direction (rad)')
 ylim([0 2*pi])
-
+%save wind speed and direction records
+fileID=fopen('NYRSimHurV4_NE7_250km.txt','w');
+for i = 19:27
+    fprintf(fileID,'%7.4f\n',V(i));
+end
+fclose(fileID);
 %%
 % [AX,H1,H2] = plotyy(6*t,V,6*t,dir,'plot');
 % set(AX(1),'XColor','k','YColor','b');

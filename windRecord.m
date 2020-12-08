@@ -1,30 +1,30 @@
-clear;clc;
-hurr10000=load('.\syntheticHurricanes\NYRSimHurV4_NE7.mat');
+function windRecord(hurr,hurrName,refEye,dLati,dLong,duration)
 %% plot world map
 latlim = [10 70];
 lonlim = [-110 10];
+figure
 worldmap(latlim,lonlim)
 load coastlines
 plotm(coastlat,coastlon)
 geoshow(coastlat,coastlon,'color','k')
 hold on
 %% plot hurricane track
-lati1=hurr10000.NYRSimHur(2).SimHur(1).Lat;
-long1=hurr10000.NYRSimHur(2).SimHur(1).Lon;
+lati1=hurr.Lat;
+long1=hurr.Lon;
 plotm(lati1,long1,'or')
 %% exact wind speed records at a location
-latiLoc=lati1(23)-1.4;
-longLoc=long1(23);
-arclenLoc = distance(lati1(23),long1(23),latiLoc,longLoc);
+latiLoc=lati1(refEye)+dLati;
+longLoc=long1(refEye)+dLong;
+arclenLoc = distance(lati1(refEye),long1(refEye),latiLoc,longLoc);
 rLoc=deg2km(arclenLoc);
-theta=hurr10000.NYRSimHur(2).SimHur(1).HeadDir;
-Vt=hurr10000.NYRSimHur(2).SimHur(1).Vt_mps;
-B=hurr10000.NYRSimHur(2).SimHur(1).B;
-dP=hurr10000.NYRSimHur(2).SimHur(1).dP;
+theta=hurr.HeadDir;
+Vt=hurr.Vt_mps;
+B=hurr.B;
+dP=hurr.dP;
 rho=1.0;
-Rmax=hurr10000.NYRSimHur(2).SimHur(1).Rmax;
-V=zeros(11,1);
-dir=zeros(11,1);
+Rmax=hurr.Rmax;
+V=zeros(length(B)-1,1);
+dir=zeros(length(B)-1,1);
 t=0:length(B)-2;
 for i=1:length(B)-1
     [arclen,az] = distance(lati1(i),long1(i),latiLoc,longLoc);
@@ -40,41 +40,22 @@ for i=1:length(B)-1
         dir(i)=dir(i)+2*pi;
     end
 end
-% plot wind records
+%% plot wind records
+recTime=refEye-(duration-1)/2:refEye+(duration-1)/2;
 figure
-%colororder({'b','m'})
 yyaxis left
-plot(6*t(19:27),V(19:27))
-%plot(6*t(13:length(t)),V(13:length(t)))
+plot(6*t(recTime),V(recTime))
 xlabel('time (h)')
 ylabel('wind speed (m/s)')
 ylim([0 70])
 yyaxis right
-plot(6*t(19:27),dir(19:27))
-%plot(6*t(13:length(t)),dir(13:length(t)))
+plot(6*t(recTime),dir(recTime))
 ylabel('wind direction (rad)')
 ylim([0 2*pi])
-%save wind speed and direction records
-filename = sprintf('NYRSimHurV4_NE7_%3.0fkm.txt',rLoc);
+%% save wind speed and direction records
+filename = sprintf('%25s_%1.0fkm.txt',hurrName,rLoc);
 fileID=fopen(fullfile('.\windRecords',filename),'w');
-for i = 19:27
+for i = recTime
     fprintf(fileID,'%7.4f %7.4f\n',V(i),dir(i));
 end
 fclose(fileID);
-%%
-% [AX,H1,H2] = plotyy(6*t,V,6*t,dir,'plot');
-% set(AX(1),'XColor','k','YColor','b');
-% set(AX(2),'XColor','k','YColor','r');
-% HH1=get(AX(1),'Ylabel');
-% set(HH1,'String','wind speed (m/s)');
-% set(HH1,'color','b');
-% HH2=get(AX(2),'Ylabel');
-% set(HH2,'String','wind direction (rad)');
-% set(HH2,'color','r');
-% set(H1,'LineStyle','-');
-% set(H1,'color','b');
-% set(H2,'LineStyle','--');
-% set(H2,'color','r');
-% legend([H1,H2],{'wind speed records';'wind direction records'});
-% xlabel('time (t)');
-% title('Hurricane Wind Records');

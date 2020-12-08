@@ -1,5 +1,5 @@
 clear;clc;
-hurr10000=load('NYRSimHurV4_NE1.mat');
+hurr10000=load('.\syntheticHurricanes\NYRSimHurV4_NE1.mat');
 %% plot world map
 latlim = [10 70];
 lonlim = [-110 10];

@@ -1,5 +1,5 @@
 clear;clc;
-hurr10000=load('NYRSimHurV4_NE7.mat');
+hurr10000=load('.\syntheticHurricanes\NYRSimHurV4_NE7.mat');
 %% plot world map
 latlim = [10 70];
 lonlim = [-110 10];
@@ -55,7 +55,7 @@ plot(6*t(19:27),dir(19:27))
 ylabel('wind direction (rad)')
 ylim([0 2*pi])
 %save wind speed and direction records
-fileID=fopen('NYRSimHurV4_NE7_150km.txt','w');
+fileID=fopen('.\windRecords\NYRSimHurV4_NE7_150km.txt','w');
 for i = 19:27
     fprintf(fileID,'%7.4f %7.4f\n',V(i),dir(i));
 end

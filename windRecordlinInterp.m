@@ -34,6 +34,48 @@ B=hurr.B(2:end-1);
 dP=hurr.dP(2:end-1);
 Rmax=hurr.Rmax(2:end-1);
 rho=1.0;
+%% generate wind record for a location
+V=zeros(length(B)-1,1);
+dir=zeros(length(B)-1,1);
+t=0:length(B)-2;
+for i=1:length(B)-1
+    [arclen,az] = distance(lati1(i),long1(i),latiLoc,longLoc);
+    alpha=deg2rad(az-theta(i+1)); %i+1 consider NaN for the first datum, same for Vt(i+1) 
+    r=deg2km(arclen);
+    f=2*7.2921*10^(-5)*sin(deg2rad(latiLoc));
+    V(i)=0.5*(Vt(i+1)*sin(alpha)-f*r)+sqrt(0.25*(Vt(i+1)*sin(alpha)-f*r)^2+...
+            B(i)*dP(i)*100/rho*(Rmax(i)/r)^B(i)*exp(-(Rmax(i)/r)^B(i)));
+    dir(i)=deg2rad(az)-pi/2;
+    if dir(i)>2*pi
+        dir(i)=dir(i)-2*pi;
+    elseif dir(i)<0
+        dir(i)=dir(i)+2*pi;
+    end
+end
+%% plot wind records
+figure
+yyaxis left
+plot(360*t,V)
+xlabel('time (min)')
+ylabel('wind speed (m/s)')
+ylim([0 70])
+yyaxis right
+plot(360*t,dir)
+ylabel('wind direction (rad)')
+ylim([0 2*pi])
+
+% recTime=(refEye-(duration-1)/2):(refEye+(duration-1)/2);
+% figure
+% yyaxis left
+% plot(360*t(recTime),V(recTime))
+% xlabel('time (min)')
+% ylabel('wind speed (m/s)')
+% ylim([0 70])
+% yyaxis right
+% plot(360*t(recTime),dir(recTime))
+% ylabel('wind direction (rad)')
+% ylim([0 2*pi])
+%% linear interpolation of 7 parameters into 10 min interval
 time=(0:36:49*36)';
 timeIn=(0:1:49*36)';
 lati1In=interp1q(time,lati1,timeIn);

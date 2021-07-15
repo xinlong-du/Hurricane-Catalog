@@ -1,14 +1,4 @@
-clear;clc;
-NYRSimHurV4_NE1=load('.\syntheticHurricanes\NYRSimHurV4_NE1.mat');
-%% hurricane NYRSimHurV4_NE1_NYR1_Sim1
-NYR=1;
-Sim=1;
-hurr=NYRSimHurV4_NE1.NYRSimHur(NYR).SimHur(Sim);
-hurrName=sprintf('NYRSimHurV4_NE1_NYR%1i_Sim%1i',NYR,Sim);
-refEye=16;
-dLati=-0.9;
-dLong=-1.12;
-duration=9;
+function [maxV,maxVIn,minDist]=windRecordlinInterp(hurr,latiLoc,longLoc)
 %% plot world map
 latlim = [10 70];
 lonlim = [-110 10];
@@ -22,11 +12,12 @@ hold on
 lati1=hurr.Lat(2:end-1);
 long1=hurr.Lon(2:end-1);
 plotm(lati1,long1,'or')
-%% exact wind speed records at a location
-latiLoc=lati1(refEye)+dLati;
-longLoc=long1(refEye)+dLong;
-arclenLoc = distance(lati1(refEye),long1(refEye),latiLoc,longLoc);
-rLoc=deg2km(arclenLoc);
+%% distance from a location to hurricane eyes
+for i=1:length(lati1)
+    arclenLoc = distance(lati1(i),long1(i),latiLoc,longLoc);
+    rLoc(i)=deg2km(arclenLoc);
+end
+minDist=min(rLoc);
 %% 7 parameters into 6-hour interval
 theta=hurr.HeadDir(2:end-1);
 Vt=hurr.Vt_mps(2:end-1);
@@ -52,6 +43,7 @@ for i=1:length(B)-1
         dir(i)=dir(i)+2*pi;
     end
 end
+maxV=max(V);
 %% plot wind records
 figure
 yyaxis left
@@ -76,8 +68,8 @@ ylim([0 2*pi])
 % ylabel('wind direction (rad)')
 % ylim([0 2*pi])
 %% linear interpolation of 7 parameters into 10 min interval
-time=(0:36:49*36)';
-timeIn=(0:1:49*36)';
+time=(0:36:(length(B)-1)*36)';
+timeIn=(0:1:(length(B)-1)*36)';
 lati1In=interp1q(time,lati1,timeIn);
 long1In=interp1q(time,long1,timeIn);
 thetaIn=interp1q(time,theta,timeIn);
@@ -103,6 +95,7 @@ for i=1:length(BIn)-1
         dirIn(i)=dirIn(i)+2*pi;
     end
 end
+maxVIn=max(VIn);
 %% plot interpolated wind records
 figure
 yyaxis left

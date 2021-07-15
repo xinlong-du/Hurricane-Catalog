@@ -43,20 +43,25 @@ for i=1:nHurr
     [maxV,maxVIn,minDist,tIn,VIn,dirIn]=windRecordlinInterp(hurr,latiLoc,longLoc);
     if maxVIn>threshold
         nSeleHurr=nSeleHurr+1;
-        selectedWind{nSeleHurr}=[tIn,VIn,dirIn];
+        seleHurr.NYR=NYR(i);
+        seleHurr.SIM=SIM(i);
+        seleHurr.tIn=tIn;
+        seleHurr.VIn=VIn;
+        seleHurr.dirIn=dirIn;
+        seleHurrAll{nSeleHurr}=seleHurr;
     end
 end
 %% plot interpolated wind records
 for i=1:nSeleHurr
-    plotWind=selectedWind{i};
+    plotWind=seleHurrAll{i};
     figure
     yyaxis left
-    plot(10*plotWind(:,1),plotWind(:,2))
+    plot(10*plotWind.tIn,plotWind.VIn)
     xlabel('time (min)')
     ylabel('wind speed (m/s)')
     ylim([0 70])
     yyaxis right
-    plot(10*plotWind(:,1),plotWind(:,3))
+    plot(10*plotWind.tIn,plotWind.dirIn)
     ylabel('wind direction (rad)')
     ylim([0 2*pi])
 end

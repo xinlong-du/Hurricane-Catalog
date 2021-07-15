@@ -1,17 +1,17 @@
-function [maxV,maxVIn,minDist]=windRecordlinInterp(hurr,latiLoc,longLoc)
-%% plot world map
-latlim = [10 70];
-lonlim = [-110 10];
-figure
-worldmap(latlim,lonlim)
-load coastlines
-plotm(coastlat,coastlon)
-geoshow(coastlat,coastlon,'color','k')
-hold on
-%% plot hurricane track
+function [maxV,maxVIn,minDist,tIn,VIn,dirIn]=windRecordlinInterp(hurr,latiLoc,longLoc)
+% %% plot world map
+% latlim = [10 70];
+% lonlim = [-110 10];
+% figure
+% worldmap(latlim,lonlim)
+% load coastlines
+% plotm(coastlat,coastlon)
+% geoshow(coastlat,coastlon,'color','k')
+% hold on
+% %% plot hurricane track
 lati1=hurr.Lat(2:end-1);
 long1=hurr.Lon(2:end-1);
-plotm(lati1,long1,'or')
+% plotm(lati1,long1,'or')
 %% distance from a location to hurricane eyes
 for i=1:length(lati1)
     arclenLoc = distance(lati1(i),long1(i),latiLoc,longLoc);
@@ -45,16 +45,16 @@ for i=1:length(B)-1
 end
 maxV=max(V);
 %% plot wind records
-figure
-yyaxis left
-plot(360*t,V)
-xlabel('time (min)')
-ylabel('wind speed (m/s)')
-ylim([0 70])
-yyaxis right
-plot(360*t,dir)
-ylabel('wind direction (rad)')
-ylim([0 2*pi])
+% figure
+% yyaxis left
+% plot(360*t,V)
+% xlabel('time (min)')
+% ylabel('wind speed (m/s)')
+% ylim([0 70])
+% yyaxis right
+% plot(360*t,dir)
+% ylabel('wind direction (rad)')
+% ylim([0 2*pi])
 
 % recTime=(refEye-(duration-1)/2):(refEye+(duration-1)/2);
 % figure
@@ -80,7 +80,7 @@ RmaxIn=interp1q(time,Rmax,timeIn);
 %% generate interpolated wind record for a location
 VIn=zeros(length(BIn)-1,1);
 dirIn=zeros(length(BIn)-1,1);
-tIn=0:length(BIn)-2;
+tIn=(0:length(BIn)-2)';
 for i=1:length(BIn)-1
     [arclen,az] = distance(lati1In(i),long1In(i),latiLoc,longLoc);
     alpha=deg2rad(az-thetaIn(i+1)); %i+1 consider NaN for the first datum, same for Vt(i+1) 
@@ -97,16 +97,16 @@ for i=1:length(BIn)-1
 end
 maxVIn=max(VIn);
 %% plot interpolated wind records
-figure
-yyaxis left
-plot(10*tIn,VIn)
-xlabel('time (min)')
-ylabel('wind speed (m/s)')
-ylim([0 70])
-yyaxis right
-plot(10*tIn,dirIn)
-ylabel('wind direction (rad)')
-ylim([0 2*pi])
+% figure
+% yyaxis left
+% plot(10*tIn,VIn)
+% xlabel('time (min)')
+% ylabel('wind speed (m/s)')
+% ylim([0 70])
+% yyaxis right
+% plot(10*tIn,dirIn)
+% ylabel('wind direction (rad)')
+% ylim([0 2*pi])
 
 % recTime=(refEye-(duration-1)/2)*36:(refEye+(duration-1)/2)*36;
 % figure

@@ -45,16 +45,16 @@ for i=1:length(B)
 end
 maxV=max(V);
 %% plot wind records
-figure
-yyaxis left
-plot(10*t,V)
-xlabel('time (min)')
-ylabel('wind speed (m/s)')
-ylim([0 70])
-yyaxis right
-plot(10*t,dir)
-ylabel('wind direction (rad)')
-ylim([0 2*pi])
+% figure
+% yyaxis left
+% plot(10*t,V)
+% xlabel('time (min)')
+% ylabel('wind speed (m/s)')
+% ylim([0 70])
+% yyaxis right
+% plot(10*t,dir)
+% ylabel('wind direction (rad)')
+% ylim([0 2*pi])
 %% linear interpolation of 7 parameters into 10 min interval
 tIn=(0:1:(length(B)-1)*36)';
 latiIn=interp1q(t,lati,tIn);
@@ -83,13 +83,13 @@ for i=1:length(BIn)
 end
 maxVIn=max(VIn);
 %% plot interpolated wind records
-figure
-yyaxis left
-plot(10*tIn,VIn)
-xlabel('time (min)')
-ylabel('wind speed (m/s)')
-ylim([0 70])
-yyaxis right
-plot(10*tIn,dirIn)
-ylabel('wind direction (rad)')
-ylim([0 2*pi])
+% figure
+% yyaxis left
+% plot(10*tIn,VIn)
+% xlabel('time (min)')
+% ylabel('wind speed (m/s)')
+% ylim([0 70])
+% yyaxis right
+% plot(10*tIn,dirIn)
+% ylabel('wind direction (rad)')
+% ylim([0 2*pi])

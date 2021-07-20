@@ -9,12 +9,12 @@ function [maxV,maxVIn,minDist,tIn,VIn,dirIn]=windRecordlinInterp(hurr,latiLoc,lo
 % geoshow(coastlat,coastlon,'color','k')
 % hold on
 % %% plot hurricane track
-lati1=hurr.Lat(2:end-1);
-long1=hurr.Lon(2:end-1);
+lati=hurr.Lat(2:end-1);
+long=hurr.Lon(2:end-1);
 % plotm(lati1,long1,'or')
 %% distance from a location to hurricane eyes
-for i=1:length(lati1)
-    arclenLoc = distance(lati1(i),long1(i),latiLoc,longLoc);
+for i=1:length(lati)
+    arclenLoc = distance(lati(i),long(i),latiLoc,longLoc);
     rLoc(i)=deg2km(arclenLoc);
 end
 minDist=min(rLoc);
@@ -28,9 +28,9 @@ rho=1.0;
 %% generate wind record for a location
 V=zeros(length(B),1);
 dir=zeros(length(B),1);
-t=0:length(B)-1;
+t=(0:36:(length(B)-1)*36)'; %unit of time is 10 min
 for i=1:length(B)
-    [arclen,az] = distance(lati1(i),long1(i),latiLoc,longLoc);
+    [arclen,az] = distance(lati(i),long(i),latiLoc,longLoc);
     alpha=deg2rad(az-theta(i)); 
     r=deg2km(arclen);
     f=2*7.2921*10^(-5)*sin(deg2rad(latiLoc));
@@ -47,42 +47,28 @@ maxV=max(V);
 %% plot wind records
 figure
 yyaxis left
-plot(360*t,V)
+plot(10*t,V)
 xlabel('time (min)')
 ylabel('wind speed (m/s)')
 ylim([0 70])
 yyaxis right
-plot(360*t,dir)
+plot(10*t,dir)
 ylabel('wind direction (rad)')
 ylim([0 2*pi])
-
-% recTime=(refEye-(duration-1)/2):(refEye+(duration-1)/2);
-% figure
-% yyaxis left
-% plot(360*t(recTime),V(recTime))
-% xlabel('time (min)')
-% ylabel('wind speed (m/s)')
-% ylim([0 70])
-% yyaxis right
-% plot(360*t(recTime),dir(recTime))
-% ylabel('wind direction (rad)')
-% ylim([0 2*pi])
 %% linear interpolation of 7 parameters into 10 min interval
-time=(0:36:(length(B)-1)*36)';
-timeIn=(0:1:(length(B)-1)*36)';
-lati1In=interp1q(time,lati1,timeIn);
-long1In=interp1q(time,long1,timeIn);
-thetaIn=interp1q(time,theta,timeIn);
-VtIn=interp1q(time,Vt,timeIn);
-BIn=interp1q(time,B,timeIn);
-dPIn=interp1q(time,dP,timeIn);
-RmaxIn=interp1q(time,Rmax,timeIn);
+tIn=(0:1:(length(B)-1)*36)';
+latiIn=interp1q(t,lati,tIn);
+longIn=interp1q(t,long,tIn);
+thetaIn=interp1q(t,theta,tIn);
+VtIn=interp1q(t,Vt,tIn);
+BIn=interp1q(t,B,tIn);
+dPIn=interp1q(t,dP,tIn);
+RmaxIn=interp1q(t,Rmax,tIn);
 %% generate interpolated wind record for a location
 VIn=zeros(length(BIn),1);
 dirIn=zeros(length(BIn),1);
-tIn=(0:length(BIn)-1)';
 for i=1:length(BIn)
-    [arclen,az] = distance(lati1In(i),long1In(i),latiLoc,longLoc);
+    [arclen,az] = distance(latiIn(i),longIn(i),latiLoc,longLoc);
     alpha=deg2rad(az-thetaIn(i)); 
     r=deg2km(arclen);
     f=2*7.2921*10^(-5)*sin(deg2rad(latiLoc));
@@ -107,15 +93,3 @@ yyaxis right
 plot(10*tIn,dirIn)
 ylabel('wind direction (rad)')
 ylim([0 2*pi])
-
-% recTime=(refEye-(duration-1)/2)*36:(refEye+(duration-1)/2)*36;
-% figure
-% yyaxis left
-% plot(10*tIn(recTime),VIn(recTime))
-% xlabel('time (min)')
-% ylabel('wind speed (m/s)')
-% ylim([0 70])
-% yyaxis right
-% plot(10*tIn(recTime),dirIn(recTime))
-% ylabel('wind direction (rad)')
-% ylim([0 2*pi])

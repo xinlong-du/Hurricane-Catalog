@@ -35,7 +35,7 @@ for j=1:201
     for k=1:201
         %az = azimuth(lati1(i),long1(i),latiGrid(j),longGrid(k));
         [arclen,az] = distance(lati1(i),long1(i),latiGrid(j),longGrid(k));
-        alpha(j,k)=deg2rad(az-theta(i+1)); %i+1 consider NaN for the first datum, same for Vt(i+1) 
+        alpha(j,k)=deg2rad(az-theta(i)); 
         r(j,k)=deg2km(arclen);
         %r(j,k)=arclen;
         f(j,k)=2*7.2921*10^(-5)*sin(deg2rad(latiGrid(j)));
@@ -55,7 +55,7 @@ Rmax=hurr10000.NYRSimHur(2).SimHur(1).Rmax;
 %% calculate wind field
 for j=1:201
     for k=1:201
-        V(j,k)=0.5*(Vt(i+1)*sin(alpha(j,k))-f(j,k)*r(j,k))+sqrt(0.25*(Vt(i+1)*sin(alpha(j,k))-f(j,k)*r(j,k))^2+...
+        V(j,k)=0.5*(Vt(i)*sin(alpha(j,k))-f(j,k)*r(j,k))+sqrt(0.25*(Vt(i)*sin(alpha(j,k))-f(j,k)*r(j,k))^2+...
             B(i)*dP(i)*100/rho*(Rmax(i)/r(j,k))^B(i)*exp(-(Rmax(i)/r(j,k))^B(i)));
     end
 end

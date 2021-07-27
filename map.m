@@ -42,7 +42,7 @@ for j=1:201
         dir(j,k)=deg2rad(az)-pi/2;
         if dir(j,k)>2*pi
             dir(j,k)=dir(j,k)-2*pi;
-        elseif dir(i)<0
+        elseif dir(j,k)<0
             dir(j,k)=dir(j,k)+2*pi;
         end
     end

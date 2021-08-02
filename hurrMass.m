@@ -2,6 +2,7 @@ clear;clc;
 %% define the location of interest
 latLoc=42.3601; %Boston
 lonLoc=-71.0589;
+threshold=41.0;
 % latiLoc=28.5383; %Orlando
 % longLoc=-81.3792;
 rad = 250; %radius, consider hurricanes within 250 km of the location
@@ -47,7 +48,6 @@ for i=1:nHurr
 end
 plotm(latC,lonC,'b')
 %% calculate wind speed for a location
-threshold=41.0;
 nSeleHurr=0;
 for i=1:nHurr
     hurr=hurr10000.NYRSimHur(NYR(i)).SimHur(SIM(i));
@@ -62,9 +62,45 @@ for i=1:nHurr
         seleHurrAll{nSeleHurr}=seleHurr;
     end
 end
-%% plot interpolated wind records
+%% find the wind > threshold
+nSeleHurrGood=0;
+duraGood=[];
+seleHurrGood={};
+nSeleHurrBad=0;
+duraBad=[];
+seleHurrBad={};
 for i=1:nSeleHurr
     plotWind=seleHurrAll{i};
+    idx=find(plotWind.VIn>threshold);
+    dura=10*plotWind.tIn(idx(end))-10*plotWind.tIn(idx(1));
+    if dura>0 && dura<1200
+        nSeleHurrGood=nSeleHurrGood+1;
+        duraGood(nSeleHurrGood)=dura;
+        plotWind.tInThresh=10*plotWind.tIn(idx(1):idx(end))-10*plotWind.tIn(idx(1)); %unit=min
+        plotWind.VInThresh=plotWind.VIn(idx(1):idx(end));
+        plotWind.dirInThresh=plotWind.dirIn(idx(1):idx(end));
+        plotWind.duration=dura;
+        seleHurrGood{nSeleHurrGood}=plotWind;
+    else
+        nSeleHurrBad=nSeleHurrBad+1;
+        duraBad(nSeleHurrBad)=dura;
+        plotWind.tInThresh=10*plotWind.tIn(idx(1):idx(end))-10*plotWind.tIn(idx(1)); %unit=min
+        plotWind.VInThresh=plotWind.VIn(idx(1):idx(end));
+        plotWind.dirInThresh=plotWind.dirIn(idx(1):idx(end));
+        plotWind.duration=dura;
+        seleHurrBad{nSeleHurrBad}=plotWind;
+    end
+end
+%% histogram of good duration 
+meanDura=mean(duraGood/60.0); %convert to hours
+figure
+histogram(duraGood/60.0,20,'Normalization','probability')
+xlabel('Duration (h)')
+ylabel('Probability')
+%% plot good records
+for i=1:nSeleHurrGood
+    plotWind=seleHurrGood{i};
+    %whole time history
     figure
     yyaxis left
     plot(10*plotWind.tIn,plotWind.VIn)
@@ -75,29 +111,45 @@ for i=1:nSeleHurr
     plot(10*plotWind.tIn,plotWind.dirIn)
     ylabel('wind direction (rad)')
     ylim([0 2*pi])
-end
-%% find the wind > threshold
-duration=zeros(nSeleHurr,1);
-for i=1:nSeleHurr
-    plotWind=seleHurrAll{i};
-    idx=find(plotWind.VIn>threshold);
-    duration(i)=10*plotWind.tIn(idx(end))-10*plotWind.tIn(idx(1));
+    title('Whole time history')
+    %apply threshold
     figure
     yyaxis left
-    plot(10*plotWind.tIn(idx(1):idx(end)),plotWind.VIn(idx(1):idx(end)))
+    plot(plotWind.tInThresh,plotWind.VInThresh)
     xlabel('time (min)')
     ylabel('wind speed (m/s)')
     ylim([0 70])
     yyaxis right
-    plot(10*plotWind.tIn(idx(1):idx(end)),plotWind.dirIn(idx(1):idx(end)))
+    plot(plotWind.tInThresh,plotWind.dirInThresh)
     ylabel('wind direction (rad)')
     ylim([0 2*pi])
+    title('Applied threshold')
 end
-idx=find(duration<1000 & duration>0);
-duration=duration(idx);
-duration=duration/60;
-meanDura=mean(duration);
-figure
-histogram(duration,20,'Normalization','probability')
-xlabel('Duration (h)')
-ylabel('Probability')
+%% plot bad records
+for i=1:nSeleHurrBad
+    plotWind=seleHurrBad{i};
+    %whole time history
+    figure
+    yyaxis left
+    plot(10*plotWind.tIn,plotWind.VIn)
+    xlabel('time (min)')
+    ylabel('wind speed (m/s)')
+    ylim([0 70])
+    yyaxis right
+    plot(10*plotWind.tIn,plotWind.dirIn)
+    ylabel('wind direction (rad)')
+    ylim([0 2*pi])
+    title('Whole time history (Bad)')
+    %apply threshold
+    figure
+    yyaxis left
+    plot(plotWind.tInThresh,plotWind.VInThresh)
+    xlabel('time (min)')
+    ylabel('wind speed (m/s)')
+    ylim([0 70])
+    yyaxis right
+    plot(plotWind.tInThresh,plotWind.dirInThresh)
+    ylabel('wind direction (rad)')
+    ylim([0 2*pi])
+    title('Applied threshold (Bad)')
+end

@@ -4,7 +4,7 @@ hurr10000=load('.\syntheticHurricanes\NYRSimHurV4_NE1.mat');
 hurr=hurr10000.NYRSimHur(2).SimHur(1);
 lati1=hurr.Lat;
 long1=hurr.Lon;
-theta=hurr.HeadDir;
+theta=hurr.HeadDir; %clockwise positive from North for hurricane heading
 Vt=hurr.Vt_mps;
 B=hurr.B;
 dP=hurr.dP;
@@ -34,12 +34,12 @@ r=zeros(nGrid,nGrid);
 for j=1:nGrid
     for k=1:nGrid
         %az = azimuth(lati1(i),long1(i),latiGrid(j),longGrid(k));
-        [arclen,az] = distance(lati1(i),long1(i),latiGrid(j),longGrid(k));
+        [arclen,az] = distance(lati1(i),long1(i),latiGrid(j),longGrid(k)); %clockwise positive from North for azimuth
         alpha(j,k)=deg2rad(az-theta(i)); 
         r(j,k)=deg2km(arclen);
         %r(j,k)=arclen;
         f(j,k)=2*7.2921*10^(-5)*sin(deg2rad(latiGrid(j)));
-        dir(j,k)=deg2rad(az)-pi/2;
+        dir(j,k)=deg2rad(az)-pi/2; %counterclockwise positive from North for wind direction
         if dir(j,k)>2*pi
             dir(j,k)=dir(j,k)-2*pi;
         elseif dir(j,k)<0

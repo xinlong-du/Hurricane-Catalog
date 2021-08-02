@@ -24,7 +24,7 @@ Vt=hurr.Vt_mps(2:end-1);
 B=hurr.B(2:end-1);
 dP=hurr.dP(2:end-1);
 Rmax=hurr.Rmax(2:end-1);
-rho=1.0;
+rho=1.225; %air density TBD. Georgiou(1985) used 1.0, But 1.225 is more accurate (the coutour is steeper means duration is shorter?)
 %% generate wind record for a location
 V=zeros(length(B),1);
 dir=zeros(length(B),1);

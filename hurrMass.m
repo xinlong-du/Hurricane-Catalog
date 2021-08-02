@@ -72,7 +72,7 @@ seleHurrBad={};
 for i=1:nSeleHurr
     plotWind=seleHurrAll{i};
     idx=find(plotWind.VIn>threshold);
-    dura=10*plotWind.tIn(idx(end))-10*plotWind.tIn(idx(1));
+    dura=10.0*plotWind.tIn(idx(end))-10.0*plotWind.tIn(idx(1))+10.0; %unit=min
     if dura>0 && dura<1200
         nSeleHurrGood=nSeleHurrGood+1;
         duraGood(nSeleHurrGood)=dura;

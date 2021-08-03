@@ -1,10 +1,17 @@
 clear;clc;
-%% define the location of interest
-latLoc=42.3601; %Boston
-lonLoc=-71.0589;
-threshold=41.0;
-% latiLoc=28.5383; %Orlando
-% longLoc=-81.3792;
+%% define the location of interest and its properties
+% latLoc=42.3601; %Boston
+% lonLoc=-71.0589;
+% threshold=41.0;
+
+latLoc=41.776863;   %Transmission tower location 1
+lonLoc=-69.99792;
+threshold=47.0/1.45; %10-min mean wind speed
+grad2sea=0.85;       %gradient to sea surface reduction factor
+sea2land=0.81;       %sea to land reduction factor for open terrain (the value need to be verified for this location)
+degTrans=0.8;        %the location is about 2km to the sea water
+VReduct=grad2sea*(1-(1-sea2land)*degTrans); %wind speed reduction factor
+
 rad = 250; %radius, consider hurricanes within 250 km of the location
 [latC,lonC] = scircle1(latLoc,lonLoc,km2deg(rad));
 massachusetts = shaperead('usastatehi',...
@@ -19,7 +26,7 @@ hurr10000=load('.\syntheticHurricanes\NYRSimHurV4_NE1.mat');
 nHurr=0;
 NYR=[];
 SIM=[];
-for i=1:100
+for i=1:10000
     N=length(hurr10000.NYRSimHur(i).SimHur);
     for j=1:N
         latHurrj=hurr10000.NYRSimHur(i).SimHur(j).Lat;
@@ -52,12 +59,12 @@ nSeleHurr=0;
 for i=1:nHurr
     hurr=hurr10000.NYRSimHur(NYR(i)).SimHur(SIM(i));
     [maxV,maxVIn,minDist,tIn,VIn,dirIn]=windRecordlinInterp(hurr,latLoc,lonLoc);
-    if maxVIn>threshold
+    if maxVIn*VReduct>threshold
         nSeleHurr=nSeleHurr+1;
         seleHurr.NYR=NYR(i);
         seleHurr.SIM=SIM(i);
         seleHurr.tIn=tIn;
-        seleHurr.VIn=VIn;
+        seleHurr.VIn=VIn*VReduct; %consider wind speed reduction
         seleHurr.dirIn=dirIn;
         seleHurrAll{nSeleHurr}=seleHurr;
     end
@@ -106,7 +113,7 @@ for i=1:nSeleHurrGood
     plot(10*plotWind.tIn,plotWind.VIn)
     xlabel('time (min)')
     ylabel('wind speed (m/s)')
-    ylim([0 70])
+    ylim([0 50])
     yyaxis right
     plot(10*plotWind.tIn,plotWind.dirIn)
     ylabel('wind direction (rad)')
@@ -118,7 +125,7 @@ for i=1:nSeleHurrGood
     plot(plotWind.tInThresh,plotWind.VInThresh)
     xlabel('time (min)')
     ylabel('wind speed (m/s)')
-    ylim([0 70])
+    ylim([0 50])
     yyaxis right
     plot(plotWind.tInThresh,plotWind.dirInThresh)
     ylabel('wind direction (rad)')
@@ -134,7 +141,7 @@ for i=1:nSeleHurrBad
     plot(10*plotWind.tIn,plotWind.VIn)
     xlabel('time (min)')
     ylabel('wind speed (m/s)')
-    ylim([0 70])
+    ylim([0 50])
     yyaxis right
     plot(10*plotWind.tIn,plotWind.dirIn)
     ylabel('wind direction (rad)')
@@ -146,7 +153,7 @@ for i=1:nSeleHurrBad
     plot(plotWind.tInThresh,plotWind.VInThresh)
     xlabel('time (min)')
     ylabel('wind speed (m/s)')
-    ylim([0 70])
+    ylim([0 50])
     yyaxis right
     plot(plotWind.tInThresh,plotWind.dirInThresh)
     ylabel('wind direction (rad)')

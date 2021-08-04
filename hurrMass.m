@@ -87,6 +87,8 @@ for i=1:nSeleHurr
         plotWind.VInThresh=plotWind.VIn(idx(1):idx(end));
         plotWind.dirInThresh=plotWind.dirIn(idx(1):idx(end));
         plotWind.duration=dura;
+        plotWind.VInN=plotWind.VInThresh.*cos(plotWind.dirInThresh); %wind speed in the North direction
+        plotWind.VInW=plotWind.VInThresh.*sin(plotWind.dirInThresh); %wind speed in the West direction
         seleHurrGood{nSeleHurrGood}=plotWind;
     else
         nSeleHurrBad=nSeleHurrBad+1;
@@ -130,6 +132,18 @@ for i=1:nSeleHurrGood
     plot(plotWind.tInThresh,plotWind.dirInThresh)
     ylabel('wind direction (rad)')
     ylim([0 2*pi])
+    title('Applied threshold')
+    %plot wind speed in North and West direction
+    figure
+    yyaxis left
+    plot(plotWind.tInThresh,plotWind.VInN)
+    xlabel('time (min)')
+    ylabel('wind speed in North (m/s)')
+    ylim([-40 40])
+    yyaxis right
+    plot(plotWind.tInThresh,plotWind.VInW)
+    ylabel('wind speed in West (m/s)')
+    ylim([-40 40])
     title('Applied threshold')
 end
 %% plot bad records

@@ -48,7 +48,7 @@ load coastlines
 plotm(coastlat,coastlon)
 geoshow(coastlat,coastlon,'color','k')
 hold on    
-for i=1:nHurr
+for i=1:10
     latHurr=hurr10000.NYRSimHur(NYR(i)).SimHur(SIM(i)).Lat;
     lonHurr=hurr10000.NYRSimHur(NYR(i)).SimHur(SIM(i)).Lon;
     plotm(latHurr,lonHurr,'r')

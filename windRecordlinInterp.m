@@ -1,4 +1,4 @@
-function [maxV,maxVIn,minDist,tIn,VIn,dirIn]=windRecordlinInterp(hurr,latiLoc,longLoc)
+function [maxV,maxVIn,minDist,tIn,VIn,dirIn,latiIn,longIn]=windRecordlinInterp(hurr,latiLoc,longLoc)
 % %% plot world map
 % latlim = [10 70];
 % lonlim = [-110 10];

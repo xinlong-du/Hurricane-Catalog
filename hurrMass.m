@@ -7,23 +7,15 @@ clear;clc;
 latLoc=41.776863;   %Transmission tower location 1
 lonLoc=-69.99792;
 threshold=47.0/1.45; %10-min mean wind speed
-grad2sea=0.85;       %gradient to sea surface reduction factor
+grad2sea=0.865;       %gradient to sea surface reduction factor (Batts et al., 1980)
 sea2land=0.81;       %sea to land reduction factor for open terrain (the value need to be verified for this location)
 degTrans=0.8;        %the location is about 2km to the sea water
 VReduct=grad2sea*(1-(1-sea2land)*degTrans); %wind speed reduction factor
 
 rad = 250; %radius, consider hurricanes within 250 km of the location
 [latC,lonC] = scircle1(latLoc,lonLoc,km2deg(rad));
-massachusetts = shaperead('usastatehi',...
-   'UseGeoCoords',true,...
-   'Selector',{@(name) strcmpi(name,'Massachusetts'),'Name'});
-usamap('massachusetts')
-geoshow(massachusetts,'FaceColor','none')
-plotm(latLoc,lonLoc,'r*')
-plotm(latC,lonC,'r')
 %% find hurricanes within 250 km of the location
 hurr10000=load('.\syntheticHurricanes\NYRSimHurV4_NE1.mat');
-nHurr=0;
 NYR=[];
 SIM=[];
 for i=1:10000
@@ -33,33 +25,17 @@ for i=1:10000
         lonHurrj=hurr10000.NYRSimHur(i).SimHur(j).Lon;
         [loni,lati]=polyxpoly(lonC,latC,lonHurrj,latHurrj);
         if ~isempty(loni)
-            nHurr=nHurr+1;
             NYR=[NYR;i];
             SIM=[SIM;j];
         end
     end
 end
-%% plot the selected hurricanes
-figure
-latlim = [10 70];
-lonlim = [-110 10];
-worldmap(latlim,lonlim)
-load coastlines
-plotm(coastlat,coastlon)
-geoshow(coastlat,coastlon,'color','k')
-hold on    
-for i=1:10
-    latHurr=hurr10000.NYRSimHur(NYR(i)).SimHur(SIM(i)).Lat;
-    lonHurr=hurr10000.NYRSimHur(NYR(i)).SimHur(SIM(i)).Lon;
-    plotm(latHurr,lonHurr,'r')
-end
-plotm(latC,lonC,'b')
 %% calculate wind speed for a location
 nSeleHurr=0;
-for i=1:nHurr
+for i=1:length(NYR)
     hurr=hurr10000.NYRSimHur(NYR(i)).SimHur(SIM(i));
-    [maxV,maxVIn,minDist,tIn,VIn,dirIn,latIn,lonIn]=windRecordlinInterp(hurr,latLoc,lonLoc);
-    if maxVIn*VReduct>threshold
+    [~,maxVIn,~,tIn,VIn,dirIn,latIn,lonIn]=windRecordlinInterp(hurr,latLoc,lonLoc);
+    if maxVIn*VReduct>threshold || maxVIn*VReduct==threshold
         nSeleHurr=nSeleHurr+1;
         seleHurr.NYR=NYR(i);
         seleHurr.SIM=SIM(i);
@@ -78,7 +54,7 @@ seleHurrGood={};
 nSeleHurrBad=0;
 duraBad=[];
 seleHurrBad={};
-for i=1:nSeleHurr
+for i=1:length(seleHurrAll)
     plotWind=seleHurrAll{i};
     
     %find wind records for interpolated hurricane within 250 km

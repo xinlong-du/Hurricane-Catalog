@@ -47,7 +47,7 @@ for i=1:length(NYR)
         seleHurrAll{nSeleHurr}=seleHurr;
     end
 end
-%% apply 250km limit and thresholding
+%% apply 250km limit to the hurricane eye
 nSeleHurrGood=0;
 duraGood=[];
 seleHurrGood={};
@@ -56,7 +56,6 @@ duraBad=[];
 seleHurrBad={};
 for i=1:length(seleHurrAll)
     plotWind=seleHurrAll{i};
-    
     %find wind records for interpolated hurricane within 250 km
     latHurrIn=plotWind.latIn;
     lonHurrIn=plotWind.lonIn;
@@ -68,43 +67,40 @@ for i=1:length(seleHurrAll)
         idx2=length(latHurrIn);
     end
     dura=10.0*seleHurrAll{i}.tIn(idx2)-10.0*seleHurrAll{i}.tIn(idx1)+10.0; %unit=min
-    dura250(i)=dura;
     plotWind.tIn250=10*plotWind.tIn(idx1:idx2)-10*plotWind.tIn(idx1); %unit=min
     plotWind.VIn250=plotWind.VIn(idx1:idx2);
     plotWind.dirIn250=plotWind.dirIn(idx1:idx2);
     plotWind.latIn250=plotWind.latIn(idx1:idx2);
     plotWind.lonIn250=plotWind.lonIn(idx1:idx2);
-    plotWind.duration250=dura;
+    plotWind.dura250=dura;
     plotWind.VIn250N=plotWind.VIn250.*cos(plotWind.dirIn250); %wind speed in the North direction
     plotWind.VIn250W=plotWind.VIn250.*sin(plotWind.dirIn250); %wind speed in the West direction
-    
-    idx=find(plotWind.VIn250>threshold);
-    if ~isempty(idx)
-        dura=plotWind.tIn250(idx(end))-plotWind.tIn250(idx(1))+10.0; %unit=min
-    end
-    if ~isempty(idx) && dura>0 && dura<1200
+    %see if the max VIn250 greater than the threshold
+    if max(plotWind.VIn250)>threshold || max(plotWind.VIn250)==threshold
         nSeleHurrGood=nSeleHurrGood+1;
         duraGood(nSeleHurrGood)=dura;
-        plotWind.tInThresh=plotWind.tIn250(idx(1):idx(end))-plotWind.tIn250(idx(1)); %unit=min
-        plotWind.VInThresh=plotWind.VIn250(idx(1):idx(end));
-        plotWind.dirInThresh=plotWind.dirIn250(idx(1):idx(end));
-        plotWind.durationThresh=dura;
-        plotWind.VInN=plotWind.VInThresh.*cos(plotWind.dirInThresh); %wind speed in the North direction
-        plotWind.VInW=plotWind.VInThresh.*sin(plotWind.dirInThresh); %wind speed in the West direction
         seleHurrGood{nSeleHurrGood}=plotWind;
     else
         nSeleHurrBad=nSeleHurrBad+1;
-        if ~isempty(idx)
-            duraBad(nSeleHurrBad)=dura;
-            plotWind.tInThresh=plotWind.tIn250(idx(1):idx(end))-plotWind.tIn250(idx(1)); %unit=min
-            plotWind.VInThresh=plotWind.VIn250(idx(1):idx(end));
-            plotWind.dirInThresh=plotWind.dirIn250(idx(1):idx(end));
-            plotWind.duration=dura;
-            seleHurrBad{nSeleHurrBad}=plotWind;
-        else
-            seleHurrBad{nSeleHurrBad}=plotWind;
-        end
+        duraBad(nSeleHurrBad)=dura;
+        seleHurrBad{nSeleHurrBad}=plotWind;
     end
+end
+%% apply thresholding of wind speed
+duraGoodThresh=[];
+seleHurrGoodThresh={};
+for i=1:nSeleHurrGood
+    plotWind=seleHurrGood{i};
+    idx=find(plotWind.VIn250>threshold | plotWind.VIn250==threshold);
+    dura=plotWind.tIn250(idx(end))-plotWind.tIn250(idx(1))+10.0; %unit=min
+    duraGoodThresh(i)=dura;
+    plotWind.tInThresh=plotWind.tIn250(idx(1):idx(end))-plotWind.tIn250(idx(1)); %unit=min
+    plotWind.VInThresh=plotWind.VIn250(idx(1):idx(end));
+    plotWind.dirInThresh=plotWind.dirIn250(idx(1):idx(end));
+    plotWind.duraThresh=dura;
+    plotWind.VInThreshN=plotWind.VIn250N(idx(1):idx(end)); %wind speed in the North direction
+    plotWind.VInThreshW=plotWind.VIn250W(idx(1):idx(end)); %wind speed in the West direction
+    seleHurrGoodThresh{i}=plotWind;
 end
 %% histogram of good duration 
 meanDura=mean(duraGood/60.0); %convert to hours
@@ -112,11 +108,18 @@ figure
 histogram(duraGood/60.0,20,'Normalization','probability')
 xlabel('Duration (h)')
 ylabel('Probability')
+title('Duration considering hurricane eyes within 250 km')
+figure
+histogram(duraGoodThresh/60.0,20,'Normalization','probability')
+xlabel('Duration (h)')
+ylabel('Probability')
+title('Duration with applying thresholding of wind speeds')
 %% plot good records
 for i=1:nSeleHurrGood
     plotWind=seleHurrGood{i};
+    plotWindThresh=seleHurrGoodThresh{i};
     figure
-    subplot(2,3,1) %whole track
+    subplot(3,3,1) %whole track
     latlim = [10 70];
     lonlim = [-110 10];
     worldmap(latlim,lonlim)
@@ -127,7 +130,7 @@ for i=1:nSeleHurrGood
     plotm(plotWind.latIn,plotWind.lonIn,'r')
     plotm(latC,lonC,'b')
     
-    subplot(2,3,4) %track within 250km
+    subplot(3,3,4) %track within 250km
     latlim = [35 45];
     lonlim = [-80 -60];
     worldmap(latlim,lonlim)
@@ -138,7 +141,7 @@ for i=1:nSeleHurrGood
     plotm(plotWind.latIn250,plotWind.lonIn250,'r*')
     plotm(latC,lonC,'b')
     
-    subplot(2,3,2) %time history within 250km
+    subplot(3,3,2) %time history within 250km
     yyaxis left
     plot(plotWind.tIn250,plotWind.VIn250)
     xlabel('time (min)')
@@ -150,7 +153,7 @@ for i=1:nSeleHurrGood
     ylim([0 2*pi])
     title('Time history with in 250km (Polar)')
     
-    subplot(2,3,5) %time history within 250km
+    subplot(3,3,5) %time history within 250km
     yyaxis left
     plot(plotWind.tIn250,plotWind.VIn250N)
     xlabel('time (min)')
@@ -162,32 +165,32 @@ for i=1:nSeleHurrGood
     ylim([-40 40])
     title('Time history with in 250km (Cartesian)')
     
-    subplot(2,3,3) %apply threshold
+    subplot(3,3,3) %apply threshold
     yyaxis left
-    plot(plotWind.tInThresh,plotWind.VInThresh)
+    plot(plotWindThresh.tInThresh,plotWindThresh.VInThresh)
     xlabel('time (min)')
     ylabel('wind speed (m/s)')
     ylim([0 50])
     yyaxis right
-    plot(plotWind.tInThresh,plotWind.dirInThresh)
+    plot(plotWindThresh.tInThresh,plotWindThresh.dirInThresh)
     ylabel('wind direction (rad)')
     ylim([0 2*pi])
     title('Applied threshold (Polar)')
     
-    subplot(2,3,6) %plot wind speed in North and West direction
+    subplot(3,3,6) %plot wind speed in North and West direction
     yyaxis left
-    plot(plotWind.tInThresh,plotWind.VInN)
+    plot(plotWindThresh.tInThresh,plotWindThresh.VInThreshN)
     xlabel('time (min)')
     ylabel('wind speed in North (m/s)')
     ylim([-40 40])
     yyaxis right
-    plot(plotWind.tInThresh,plotWind.VInW)
+    plot(plotWindThresh.tInThresh,plotWindThresh.VInThreshW)
     ylabel('wind speed in West (m/s)')
     ylim([-40 40])
     title('Applied threshold (Cartesian)')
     
     %whole time history
-    figure
+    subplot(3,3,7:9)
     yyaxis left
     plot(10*plotWind.tIn,plotWind.VIn)
     xlabel('time (min)')
@@ -203,19 +206,29 @@ end
 for i=1:nSeleHurrBad
     plotWind=seleHurrBad{i};
     figure
-    subplot(2,1,1) %whole time history
-    yyaxis left
-    plot(10*plotWind.tIn,plotWind.VIn)
-    xlabel('time (min)')
-    ylabel('wind speed (m/s)')
-    ylim([0 50])
-    yyaxis right
-    plot(10*plotWind.tIn,plotWind.dirIn)
-    ylabel('wind direction (rad)')
-    ylim([0 2*pi])
-    title('Whole time history (Bad)')
+    subplot(3,2,1) %whole track
+    latlim = [10 70];
+    lonlim = [-110 10];
+    worldmap(latlim,lonlim)
+    load coastlines
+    plotm(coastlat,coastlon)
+    geoshow(coastlat,coastlon,'color','k')
+    hold on
+    plotm(plotWind.latIn,plotWind.lonIn,'r')
+    plotm(latC,lonC,'b')
     
-    subplot(2,1,2) %apply threshold
+    subplot(3,2,3) %track within 250km
+    latlim = [35 45];
+    lonlim = [-80 -60];
+    worldmap(latlim,lonlim)
+    load coastlines
+    plotm(coastlat,coastlon)
+    geoshow(coastlat,coastlon,'color','k')
+    hold on
+    plotm(plotWind.latIn250,plotWind.lonIn250,'r*')
+    plotm(latC,lonC,'b')
+    
+    subplot(3,2,2) %time history within 250km
     yyaxis left
     plot(plotWind.tIn250,plotWind.VIn250)
     xlabel('time (min)')
@@ -226,4 +239,28 @@ for i=1:nSeleHurrBad
     ylabel('wind direction (rad)')
     ylim([0 2*pi])
     title('Time history with in 250km (Polar)')
+    
+    subplot(3,2,4) %time history within 250km
+    yyaxis left
+    plot(plotWind.tIn250,plotWind.VIn250N)
+    xlabel('time (min)')
+    ylabel('wind speed in North (m/s)')
+    ylim([-40 40])
+    yyaxis right
+    plot(plotWind.tIn250,plotWind.VIn250W)
+    ylabel('wind speed in West (m/s)')
+    ylim([-40 40])
+    title('Time history with in 250km (Cartesian)')
+    
+    subplot(3,2,5:6) %whole time history
+    yyaxis left
+    plot(10*plotWind.tIn,plotWind.VIn)
+    xlabel('time (min)')
+    ylabel('wind speed (m/s)')
+    ylim([0 50])
+    yyaxis right
+    plot(10*plotWind.tIn,plotWind.dirIn)
+    ylabel('wind direction (rad)')
+    ylim([0 2*pi])
+    title('Whole time history (Bad)')
 end

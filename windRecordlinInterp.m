@@ -9,8 +9,8 @@ function [maxV,maxVIn,minDist,tIn,VIn,dirIn,latiIn,longIn]=windRecordlinInterp(h
 % geoshow(coastlat,coastlon,'color','k')
 % hold on
 % %% plot hurricane track
-lati=hurr.Lat(2:end-1);
-long=hurr.Lon(2:end-1);
+lati=hurr.Lat;
+long=hurr.Lon;
 % plotm(lati1,long1,'or')
 %% distance from a location to hurricane eyes
 for i=1:length(lati)
@@ -19,11 +19,11 @@ for i=1:length(lati)
 end
 minDist=min(rLoc);
 %% 7 parameters into 6-hour interval
-theta=hurr.HeadDir(2:end-1);
-Vt=hurr.Vt_mps(2:end-1);
-B=hurr.B(2:end-1);
-dP=hurr.dP(2:end-1);
-Rmax=hurr.Rmax(2:end-1);
+theta=hurr.HeadDir;
+Vt=hurr.Vt_mps;
+B=hurr.B;
+dP=hurr.dP;
+Rmax=hurr.Rmax;
 rho=1.225; %air density TBD. Georgiou(1985) used 1.0, But 1.225 is more accurate (the coutour is steeper means duration is shorter?)
 %% generate wind record for a location
 V=zeros(length(B),1);

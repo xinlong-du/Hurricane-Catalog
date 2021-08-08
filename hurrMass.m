@@ -35,7 +35,7 @@ nSeleHurr=0;
 for i=1:length(NYR)
     hurr=hurr10000.NYRSimHur(NYR(i)).SimHur(SIM(i));
     [~,maxVIn,~,tIn,VIn,dirIn,latIn,lonIn]=windRecordlinInterp(hurr,latLoc,lonLoc);
-    if maxVIn*VReduct>threshold || maxVIn*VReduct==threshold
+    if maxVIn*VReduct>threshold
         nSeleHurr=nSeleHurr+1;
         seleHurr.NYR=NYR(i);
         seleHurr.SIM=SIM(i);
@@ -76,7 +76,7 @@ for i=1:length(seleHurrAll)
     plotWind.VIn250N=plotWind.VIn250.*cos(plotWind.dirIn250); %wind speed in the North direction
     plotWind.VIn250W=plotWind.VIn250.*sin(plotWind.dirIn250); %wind speed in the West direction
     %see if the max VIn250 greater than the threshold
-    if max(plotWind.VIn250)>threshold || max(plotWind.VIn250)==threshold
+    if max(plotWind.VIn250)>threshold
         nSeleHurrGood=nSeleHurrGood+1;
         duraGood(nSeleHurrGood)=dura;
         seleHurrGood{nSeleHurrGood}=plotWind;
@@ -91,7 +91,7 @@ duraGoodThresh=[];
 seleHurrGoodThresh={};
 for i=1:nSeleHurrGood
     plotWind=seleHurrGood{i};
-    idx=find(plotWind.VIn250>threshold | plotWind.VIn250==threshold);
+    idx=find(plotWind.VIn250>threshold);
     dura=plotWind.tIn250(idx(end))-plotWind.tIn250(idx(1))+10.0; %unit=min
     duraGoodThresh(i)=dura;
     plotWind.tInThresh=plotWind.tIn250(idx(1):idx(end))-plotWind.tIn250(idx(1)); %unit=min

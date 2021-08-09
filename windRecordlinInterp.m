@@ -24,7 +24,7 @@ Vt=hurr.Vt_mps;
 B=hurr.B;
 dP=hurr.dP;
 Rmax=hurr.Rmax;
-rho=1.225; %air density TBD. Georgiou(1985) used 1.0, But 1.225 is more accurate (the coutour is steeper means duration is shorter?)
+rho=1.112; %air density TBD. Georgiou(1985) used 1.0. Here use 1.112 for 1000 m height.
 %% generate wind record for a location
 V=zeros(length(B),1);
 dir=zeros(length(B),1);

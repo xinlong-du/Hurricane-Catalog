@@ -76,7 +76,7 @@ for i=1:length(seleHurrAll)
     plotWind.VIn250N=plotWind.VIn250.*cos(plotWind.dirIn250); %wind speed in the North direction
     plotWind.VIn250W=plotWind.VIn250.*sin(plotWind.dirIn250); %wind speed in the West direction
     %see if the max VIn250 greater than the threshold
-    if max(plotWind.VIn250)>threshold
+    if max(plotWind.VIn250)>threshold && dura<2400
         nSeleHurrGood=nSeleHurrGood+1;
         duraGood(nSeleHurrGood)=dura;
         seleHurrGood{nSeleHurrGood}=plotWind;

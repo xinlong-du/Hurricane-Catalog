@@ -74,7 +74,7 @@ for i=1:length(seleHurrAll)
     plotWind.lonIn250=plotWind.lonIn(idx1:idx2);
     plotWind.dura250=dura;
     plotWind.VIn250N=plotWind.VIn250.*cos(plotWind.dirIn250); %wind speed in the North direction
-    plotWind.VIn250W=plotWind.VIn250.*sin(plotWind.dirIn250); %wind speed in the West direction
+    plotWind.VIn250E=plotWind.VIn250.*sin(plotWind.dirIn250); %wind speed in the East direction
     %see if the max VIn250 greater than the threshold
     if max(plotWind.VIn250)>threshold && dura<2400
         nSeleHurrGood=nSeleHurrGood+1;
@@ -99,7 +99,7 @@ for i=1:nSeleHurrGood
     plotWind.dirInThresh=plotWind.dirIn250(idx(1):idx(end));
     plotWind.duraThresh=dura;
     plotWind.VInThreshN=plotWind.VIn250N(idx(1):idx(end)); %wind speed in the North direction
-    plotWind.VInThreshW=plotWind.VIn250W(idx(1):idx(end)); %wind speed in the West direction
+    plotWind.VInThreshE=plotWind.VIn250E(idx(1):idx(end)); %wind speed in the East direction
     seleHurrGoodThresh{i}=plotWind;
 end
 %% histogram of good duration 
@@ -140,6 +140,7 @@ for i=1:nSeleHurrGood
     hold on
     plotm(plotWind.latIn250,plotWind.lonIn250,'r*')
     plotm(latC,lonC,'b')
+    plotm(latLoc,lonLoc,'bo')
     
     subplot(3,3,2) %time history within 250km
     yyaxis left
@@ -160,8 +161,8 @@ for i=1:nSeleHurrGood
     ylabel('wind speed in North (m/s)')
     ylim([-40 40])
     yyaxis right
-    plot(plotWind.tIn250,plotWind.VIn250W)
-    ylabel('wind speed in West (m/s)')
+    plot(plotWind.tIn250,plotWind.VIn250E)
+    ylabel('wind speed in East (m/s)')
     ylim([-40 40])
     title('Time history with in 250km (Cartesian)')
     
@@ -184,8 +185,8 @@ for i=1:nSeleHurrGood
     ylabel('wind speed in North (m/s)')
     ylim([-40 40])
     yyaxis right
-    plot(plotWindThresh.tInThresh,plotWindThresh.VInThreshW)
-    ylabel('wind speed in West (m/s)')
+    plot(plotWindThresh.tInThresh,plotWindThresh.VInThreshE)
+    ylabel('wind speed in East (m/s)')
     ylim([-40 40])
     title('Applied threshold (Cartesian)')
     
@@ -227,6 +228,7 @@ for i=1:nSeleHurrBad
     hold on
     plotm(plotWind.latIn250,plotWind.lonIn250,'r*')
     plotm(latC,lonC,'b')
+    plotm(latLoc,lonLoc,'bo')
     
     subplot(3,2,2) %time history within 250km
     yyaxis left
@@ -247,8 +249,8 @@ for i=1:nSeleHurrBad
     ylabel('wind speed in North (m/s)')
     ylim([-40 40])
     yyaxis right
-    plot(plotWind.tIn250,plotWind.VIn250W)
-    ylabel('wind speed in West (m/s)')
+    plot(plotWind.tIn250,plotWind.VIn250E)
+    ylabel('wind speed in East (m/s)')
     ylim([-40 40])
     title('Time history with in 250km (Cartesian)')
     

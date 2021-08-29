@@ -46,3 +46,18 @@ for i=1:length(seleHurrGood)
     end
 end
 dlmwrite('windRecords2D.txt',windRecords2D,'delimiter','\t')
+%% flatten 2D wind to 1D
+windRecords2Dto1D=zeros(maxDura/10*2+1,length(seleHurrGood));
+windRecords2Dto1D(1,:)=1:length(seleHurrGood);
+for i=1:length(seleHurrGood)
+    numP=length(seleHurrGood{i}.VIn250N);
+    mid=round(maxDura/10/2)+1;
+    if rem(numP,2)==0
+        windRecords2Dto1D(mid-numP/2+1:mid+numP/2,i)=seleHurrGood{i}.VIn250N;
+        windRecords2Dto1D(mid-numP/2+1+142:mid+numP/2+142,i)=seleHurrGood{i}.VIn250E;
+    else
+        windRecords2Dto1D(mid-(numP/2-0.5):mid+(numP/2-0.5),i)=seleHurrGood{i}.VIn250N;
+        windRecords2Dto1D(mid-(numP/2-0.5)+142:mid+(numP/2-0.5)+142,i)=seleHurrGood{i}.VIn250E;
+    end
+end
+dlmwrite('windRecords2Dto1D.txt',windRecords2Dto1D,'delimiter','\t')

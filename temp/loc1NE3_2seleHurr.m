@@ -61,3 +61,23 @@ for i=1:length(seleHurrGood)
     end
 end
 dlmwrite('windRecords2Dto1D.txt',windRecords2Dto1D,'delimiter','\t')
+%% flatten 2D wind to 1D and add ramp-up and ramp-down
+windRecords2Dto1Dramp=zeros(maxDura/10*2+1+24,length(seleHurrGood));
+windRecords2Dto1Dramp(1,:)=1:length(seleHurrGood);
+for i=1:length(seleHurrGood)
+    numP=length(seleHurrGood{i}.VIn250N)+12;
+    mid1=round(maxDura/10/2)+1+6;
+    mid2=mid1+maxDura/10+12;
+    windN=seleHurrGood{i}.VIn250N;
+    windE=seleHurrGood{i}.VIn250E;
+    windNramp=[(windN(1)/7:windN(1)/7:windN(1)/7*6)';windN;(windN(end)/7*6:-windN(end)/7:windN(end)/7)'];
+    windEramp=[(windE(1)/7:windE(1)/7:windE(1)/7*6)';windE;(windE(end)/7*6:-windE(end)/7:windE(end)/7)'];
+    if rem(numP,2)==0
+        windRecords2Dto1Dramp(mid1-numP/2+1:mid1+numP/2,i)=windNramp;
+        windRecords2Dto1Dramp(mid2-numP/2+1:mid2+numP/2,i)=windEramp;
+    else
+        windRecords2Dto1Dramp(mid1-(numP/2-0.5):mid1+(numP/2-0.5),i)=windNramp;
+        windRecords2Dto1Dramp(mid2-(numP/2-0.5):mid2+(numP/2-0.5),i)=windEramp;
+    end
+end
+dlmwrite('windRecords2Dto1Dramp.txt',windRecords2Dto1Dramp,'delimiter','\t')

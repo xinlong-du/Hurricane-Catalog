@@ -81,18 +81,25 @@ for i=1:length(seleHurrGood)
     end
 end
 dlmwrite('windRecords2Dto1Dramp.txt',windRecords2Dto1Dramp,'delimiter','\t')
+%% load clusters
+fid=fopen('clusterList.txt');
+line1=fgetl(fid);
+res=line1;
+while ischar(line1)
+line1=fgetl(fid);
+res=char(res,line1);
+end
+fclose(fid);
+for k=1:size(res,1)-1
+  clusters{k}=str2num(res(k,:));
+end
 %% plot clustered hurricane tracks
-cluster1=load('cluster1.txt');
-cluster2=load('cluster2.txt');
-cluster3=load('cluster3.txt');
-cluster4=load('cluster4.txt');
-cluster5=load('cluster5.txt');
-
 latLoc=41.776863;    %Transmission tower location 1
 lonLoc=-69.99792;
 rad = 250; %radius, consider hurricanes within 250 km of the location
 [latC,lonC] = scircle1(latLoc,lonLoc,km2deg(rad));
 
+for j=1:length(clusters)
 figure
 latlim = [35 45];
 lonlim = [-80 -60];
@@ -101,74 +108,11 @@ load coastlines
 plotm(coastlat,coastlon)
 geoshow(coastlat,coastlon,'color','k')
 hold on
-for i=1:length(cluster1)
-    idxHurr=cluster1(i);
+for i=1:length(clusters{j})
+    idxHurr=clusters{j}(i);
     plotWind=seleHurrGood{idxHurr};
     plotm(plotWind.latIn250,plotWind.lonIn250,'r')
 end
 plotm(latC,lonC,'b')
 plotm(latLoc,lonLoc,'bo')
-
-figure
-latlim = [35 45];
-lonlim = [-80 -60];
-worldmap(latlim,lonlim)
-load coastlines
-plotm(coastlat,coastlon)
-geoshow(coastlat,coastlon,'color','k')
-hold on
-for i=1:length(cluster2)
-    idxHurr=cluster2(i);
-    plotWind=seleHurrGood{idxHurr};
-    plotm(plotWind.latIn250,plotWind.lonIn250,'r')
 end
-plotm(latC,lonC,'b')
-plotm(latLoc,lonLoc,'bo')
-
-figure
-latlim = [35 45];
-lonlim = [-80 -60];
-worldmap(latlim,lonlim)
-load coastlines
-plotm(coastlat,coastlon)
-geoshow(coastlat,coastlon,'color','k')
-hold on
-for i=1:length(cluster3)
-    idxHurr=cluster3(i);
-    plotWind=seleHurrGood{idxHurr};
-    plotm(plotWind.latIn250,plotWind.lonIn250,'r')
-end
-plotm(latC,lonC,'b')
-plotm(latLoc,lonLoc,'bo')
-
-figure
-latlim = [35 45];
-lonlim = [-80 -60];
-worldmap(latlim,lonlim)
-load coastlines
-plotm(coastlat,coastlon)
-geoshow(coastlat,coastlon,'color','k')
-hold on
-for i=1:length(cluster4)
-    idxHurr=cluster4(i);
-    plotWind=seleHurrGood{idxHurr};
-    plotm(plotWind.latIn250,plotWind.lonIn250,'r')
-end
-plotm(latC,lonC,'b')
-plotm(latLoc,lonLoc,'bo')
-
-figure
-latlim = [35 45];
-lonlim = [-80 -60];
-worldmap(latlim,lonlim)
-load coastlines
-plotm(coastlat,coastlon)
-geoshow(coastlat,coastlon,'color','k')
-hold on
-for i=1:length(cluster5)
-    idxHurr=cluster4(i);
-    plotWind=seleHurrGood{idxHurr};
-    plotm(plotWind.latIn250,plotWind.lonIn250,'r')
-end
-plotm(latC,lonC,'b')
-plotm(latLoc,lonLoc,'bo')

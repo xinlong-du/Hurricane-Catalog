@@ -132,7 +132,7 @@ for i=1:length(clusters)
     seleHurrCluster{i}=sortedHurrCluster{i}(1:nSeleHurrCluster(i));
     duraSeleCluster=[duraSeleCluster,dura(1:nSeleHurrCluster(i))];
 end
-%% plot sorted hurricanes (need to be cleaned with lines 96-118)
+%% plot sorted hurricanes (for validation, figures should be the same with those from lines 96-118)
 for i=1:length(clusters)
 figure
 latlim = [35 45];
@@ -177,7 +177,7 @@ for i=1:length(clusters)
     for j=1:nSeleHurrCluster(i)
         plotWind=seleHurrCluster{i}{j};
         figure
-        subplot(3,2,1) %whole track
+        subplot(2,2,1) %whole track
         latlim = [10 70];
         lonlim = [-110 10];
         worldmap(latlim,lonlim)
@@ -188,7 +188,7 @@ for i=1:length(clusters)
         plotm(plotWind.latIn,plotWind.lonIn,'r')
         plotm(latC,lonC,'b')
     
-        subplot(3,2,3) %track within 250km
+        subplot(2,2,3) %track within 250km
         latlim = [35 45];
         lonlim = [-80 -60];
         worldmap(latlim,lonlim)
@@ -200,7 +200,7 @@ for i=1:length(clusters)
         plotm(latC,lonC,'b')
         plotm(latLoc,lonLoc,'bo')
     
-        subplot(3,2,2) %time history within 250km
+        subplot(2,2,2) %time history within 250km
         yyaxis left
         plot(plotWind.tIn250,plotWind.VIn250)
         xlabel('time (min)')
@@ -212,7 +212,7 @@ for i=1:length(clusters)
         ylim([0 2*pi])
         title('Time history with in 250km (Polar)')
     
-        subplot(3,2,4) %time history within 250km
+        subplot(2,2,4) %time history within 250km
         yyaxis left
         plot(plotWind.tIn250,plotWind.VIn250N)
         xlabel('time (min)')
@@ -224,17 +224,17 @@ for i=1:length(clusters)
         ylim([-40 40])
         title('Time history with in 250km (Cartesian)')
         
-        %whole time history
-        subplot(3,2,5:6)
-        yyaxis left
-        plot(10*plotWind.tIn,plotWind.VIn)
-        xlabel('time (min)')
-        ylabel('wind speed (m/s)')
-        ylim([0 50])
-        yyaxis right
-        plot(10*plotWind.tIn,plotWind.dirIn)
-        ylabel('wind direction (rad)')
-        ylim([0 2*pi])
-        title('Whole time history (Good)')
+%         %whole time history
+%         subplot(3,2,5:6)
+%         yyaxis left
+%         plot(10*plotWind.tIn,plotWind.VIn)
+%         xlabel('time (min)')
+%         ylabel('wind speed (m/s)')
+%         ylim([0 50])
+%         yyaxis right
+%         plot(10*plotWind.tIn,plotWind.dirIn)
+%         ylabel('wind direction (rad)')
+%         ylim([0 2*pi])
+%         title('Whole time history (Good)')
     end
 end

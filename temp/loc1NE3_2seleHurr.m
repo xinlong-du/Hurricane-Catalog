@@ -157,20 +157,40 @@ ylabel('Number of hurricanes')
 title('Duration considering hurricane eyes within 250 km')
 
 for i=1:length(clusters)
-figure
-latlim = [35 45];
-lonlim = [-80 -60];
-worldmap(latlim,lonlim)
-load coastlines
-plotm(coastlat,coastlon)
-geoshow(coastlat,coastlon,'color','k')
-hold on
-for j=1:nSeleHurrCluster(i)
-    plotWind=seleHurrCluster{i}{j};
-    plotm(plotWind.latIn250,plotWind.lonIn250,'r')
-end
-plotm(latC,lonC,'b')
-plotm(latLoc,lonLoc,'bo')
+    figure
+    latlim = [35 45];
+    lonlim = [-80 -60];
+    worldmap(latlim,lonlim)
+    load coastlines
+    plotm(coastlat,coastlon)
+    geoshow(coastlat,coastlon,'color','k')
+    hold on
+    for j=1:nSeleHurrCluster(i)
+        plotWind=seleHurrCluster{i}{j};
+        plotm(plotWind.latIn250,plotWind.lonIn250,'r')
+    end
+    plotm(latC,lonC,'b')
+    plotm(latLoc,lonLoc,'bo')
+    
+    figure
+    subplot(2,1,1) %time history within 250km
+    for j=1:nSeleHurrCluster(i)
+        plotWind=seleHurrCluster{i}{j};
+        plot(plotWind.tIn250,plotWind.VIn250N)
+        xlabel('time (min)')
+        ylabel('wind speed in North (m/s)')
+        ylim([-40 40])
+        hold on
+    end
+    subplot(2,1,2) %time history within 250km
+    for j=1:nSeleHurrCluster(i)
+        plotWind=seleHurrCluster{i}{j};
+        plot(plotWind.tIn250,plotWind.VIn250E)
+        xlabel('time (min)')
+        ylabel('wind speed in East (m/s)')
+        ylim([-40 40])
+        hold on
+    end
 end
 %%
 for i=1:length(clusters)

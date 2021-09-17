@@ -1,7 +1,7 @@
 clear;clc;
 %% hurricane parameters
-hurr10000=load('.\syntheticHurricanes\NYRSimHurV4_NE1.mat');
-hurr=hurr10000.NYRSimHur(2).SimHur(1);
+hurr10000=load('.\syntheticHurricanes\NYRSimHurV4_NE3.mat');
+hurr=hurr10000.NYRSimHur(100).SimHur(6);
 lati1=hurr.Lat;
 long1=hurr.Lon;
 theta=hurr.HeadDir; %clockwise positive from North for hurricane heading
@@ -21,7 +21,7 @@ geoshow(coastlat,coastlon,'color','k')
 hold on
 plotm(lati1,long1,'or')
 %% generate grid for wind field
-i=23; %time for the hurricane wind field
+i=25; %time for the hurricane wind field
 nLatiGrid=101;
 nLongGrid=51;
 latiGrid=lati1(i)-5:0.1:lati1(i)+5;
@@ -52,9 +52,11 @@ for j=1:nLatiGrid
 end
 %% plot wind field
 figure
-contourf(longGrid,latiGrid,V,'ShowText','on')
+contourf(longGrid,latiGrid,V,0:5:60,'ShowText','on')
 axis equal
-hold on
-quiver(longGrid,latiGrid,sin(dir),cos(dir))
+xlabel('Longitude')
+ylabel('Latitude')
+% hold on
+% quiver(longGrid,latiGrid,sin(dir),cos(dir))
 %% check wind directions
 dirDeg=rad2deg(dir);

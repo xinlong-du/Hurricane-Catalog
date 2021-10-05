@@ -1,12 +1,5 @@
 clear;clc;
-% figure
-% latlim = [35 45];
-% lonlim = [-80 -60];
-% worldmap(latlim,lonlim)
-% load coastlines
-% plotm(coastlat,coastlon)
-% geoshow(coastlat,coastlon,'color','k')
-%% 
+%% make grids on Massachusetts
 figure
 massachusetts = shaperead('usastatehi',...
    'UseGeoCoords',true,...
@@ -17,3 +10,9 @@ ax=usamap(latlim,lonlim);
 geoshow(massachusetts,'FaceColor','none')
 gridm('on');
 gridm('mlinelocation',0.2,'plinelocation',0.2,'GColor','k','GLineWidth',1,'GLineStyle',':')
+hold on
+%% find centroid of each grid
+cenLat=41-0.1:0.2:43-0.1;
+cenLon=-74-0.1:0.2:-69-0.1;
+[cenLatMesh,cenLonMesh]=meshgrid(cenLat,cenLon);
+plotm(cenLatMesh,cenLonMesh,'r*')

@@ -1,12 +1,12 @@
-clear;clc;
+function windRecordOneSite(latLoc,lonLoc,spd50y)
 %% define the location of interest and its properties
 % latLoc=42.3601; %Boston
 % lonLoc=-71.0589;
 % threshold=41.0;
 
-latLoc=41.776863;    %Transmission tower location 1
-lonLoc=-69.99792;
-threshold=47.0/1.45; %10-min mean wind speed
+% latLoc=41.776863;    %Transmission tower location 1
+% lonLoc=-69.99792;
+threshold=spd50y/1.45; %10-min mean wind speed
 grad2sea=0.85;       %gradient to sea surface reduction factor (Vickery et al., 2009)
 sea2land=0.81;       %sea to land reduction factor for open terrain (the value need to be verified for this location)
 degTrans=0.77;       %the location is about 2km to the sea water

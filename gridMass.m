@@ -34,6 +34,16 @@ for i=1:length(cenLon)
         end
     end
 end
+cenMass=cell(length(lonID),1);
 for i=1:length(lonID)
-    plotm(cenLatMesh(lonID(i),latID(i)),cenLonMesh(lonID(i),latID(i)),'b*')
+    cenCoord.lat=cenLatMesh(lonID(i),latID(i));
+    cenCoord.lon=cenLonMesh(lonID(i),latID(i));
+    cenMass{i}=cenCoord;
+    plotm(cenCoord.lat,cenCoord.lon,'b*')
+end
+%% calculate wind speeds for each grid
+spd50y=40; %50-y MRI (m/s)
+for i=1:length(cenMass)
+    cenCoord=cenMass{i};
+    windRecordOneSite(cenCoord.lat,cenCoord.lon,spd50y);
 end

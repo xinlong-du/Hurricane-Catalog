@@ -34,16 +34,21 @@ for i=1:length(cenLon)
         end
     end
 end
-cenMass=cell(length(lonID),1);
+cenMassLat=zeros(length(lonID),1);
+cenMassLon=zeros(length(lonID),1);
 for i=1:length(lonID)
-    cenCoord.lat=cenLatMesh(lonID(i),latID(i));
-    cenCoord.lon=cenLonMesh(lonID(i),latID(i));
-    cenMass{i}=cenCoord;
-    plotm(cenCoord.lat,cenCoord.lon,'b*')
+    cenMassLat(i)=cenLatMesh(lonID(i),latID(i));
+    cenMassLon(i)=cenLonMesh(lonID(i),latID(i));
+    plotm(cenMassLat(i),cenMassLon(i),'b*')
 end
+%% prepare site properties
+[arclen,az] = distance(cenMassLat(1),cenMassLon(1),cenMassLat(2),cenMassLon(2));
+r=deg2km(arclen); %distance between 1 and 2 is 22.2390km (0.2000rad); distance between 1 and 3 is 16.5008km (0.1484rad)
+filename = '.\windRecordsMass\siteProperties.xlsx';
+xlswrite(filename,[cenMassLat,cenMassLon],1,'A2')
 %% calculate wind speeds for each grid
-spd50y=40; %50-y MRI (m/s)
-for i=1:length(cenMass)
-    cenCoord=cenMass{i};
-    windRecordOneSite(cenCoord.lat,cenCoord.lon,spd50y);
-end
+% spd50y=40; %50-y MRI (m/s)
+% for i=1:length(cenMass)
+%     cenCoord=cenMass{i};
+%     windRecordOneSite(cenCoord.lat,cenCoord.lon,spd50y);
+% end

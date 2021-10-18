@@ -1,4 +1,4 @@
-function windRecordOneSite(latLoc,lonLoc,spd50y)
+function [seleHurrGood,duraGood]=windRecordOneSite(latLoc,lonLoc,spd50y)
 %% define the location of interest and its properties
 % latLoc=42.3601; %Boston
 % lonLoc=-71.0589;
@@ -102,6 +102,7 @@ for i=1:nSeleHurrGood
     plotWind.VInThreshE=plotWind.VIn250E(idx(1):idx(end)); %wind speed in the East direction
     seleHurrGoodThresh{i}=plotWind;
 end
+%{
 %% histogram of good duration 
 meanDura=mean(duraGood/60.0); %convert to hours
 figure
@@ -266,3 +267,4 @@ for i=1:nSeleHurrBad
     ylim([0 2*pi])
     title('Whole time history (Bad)')
 end
+%}

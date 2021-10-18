@@ -41,14 +41,28 @@ for i=1:length(lonID)
     cenMassLon(i)=cenLonMesh(lonID(i),latID(i));
     plotm(cenMassLat(i),cenMassLon(i),'b*')
 end
-%% prepare site properties
 [arclen,az] = distance(cenMassLat(1),cenMassLon(1),cenMassLat(2),cenMassLon(2));
 r=deg2km(arclen); %distance between 1 and 2 is 22.2390km (0.2000rad); distance between 1 and 3 is 16.5008km (0.1484rad)
+%% prepare site properties
+%50-year MRI
 filename = '.\windRecordsMass\siteProperties.xlsx';
 % xlswrite(filename,[cenMassLat,cenMassLon],1,'A2')
 siteProp=xlsread(filename);
 spd50y=siteProp(:,3); %50-y MRI (m/s)
+
+%degTrans
+load coastlines  
+coastIndexes = nan(size(cenMassLat));
+distFromCoastDeg = nan(size(cenMassLat));
+% Find distance and corresponding coastal point  
+for i=1:1:numel(cenMassLat)  
+    [dist, az] = distance(cenMassLat(i), cenMassLon(i), coastlat, coastlon);
+    [distFromCoastDeg(i),coastIndexes(i)] = min(dist);
+end
+distFromCoastKm=deg2km(distFromCoastDeg);
 %% calculate wind speeds for each grid
 for i=1:length(cenMassLon)
-    windRecordOneSite(cenMassLat(i),cenMassLon(i),spd50y(i));
+    [seleHurrGood,duraGood]=windRecordOneSite(cenMassLat(i),cenMassLon(i),spd50y(i));
+    filename=strcat('.\windRecordsMass\grid',num2str(i),'.mat');
+    save(filename,'seleHurrGood','duraGood')
 end

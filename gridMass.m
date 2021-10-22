@@ -60,9 +60,16 @@ for i=1:1:numel(cenMassLat)
     [distFromCoastDeg(i),coastIndexes(i)] = min(dist);
 end
 distFromCoastKm=deg2km(distFromCoastDeg);
+filename = '.\windRecordsMass\degTrans3sGust.csv';
+degTrans3s=csvread(filename);
+filename = '.\windRecordsMass\degTrans1hAverage.csv';
+degTrans1h=csvread(filename);
+degTransGrid3s=interp1(degTrans3s(:,1),degTrans3s(:,2),distFromCoastKm*1000);
+degTransGrid1h=interp1(degTrans1h(:,1),degTrans1h(:,2),distFromCoastKm*1000);
+degTransGrid10min=(degTransGrid3s+degTransGrid1h)/2; %approximate degTrans for 10min mean wind speed
 %% calculate wind speeds for each grid
 for i=1:length(cenMassLon)
-    [seleHurrGood,duraGood]=windRecordOneSite(cenMassLat(i),cenMassLon(i),spd50y(i));
+    [seleHurrGood,duraGood]=windRecordOneSite(cenMassLat(i),cenMassLon(i),spd50y(i),degTransGrid10min(i));
     filename=strcat('.\windRecordsMass\grid',num2str(i),'.mat');
     save(filename,'seleHurrGood','duraGood')
 end

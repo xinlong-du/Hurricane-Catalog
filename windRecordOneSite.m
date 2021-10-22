@@ -1,4 +1,4 @@
-function [seleHurrGood,duraGood]=windRecordOneSite(latLoc,lonLoc,spd50y)
+function [seleHurrGood,duraGood]=windRecordOneSite(latLoc,lonLoc,spd50y,degTrans)
 %% define the location of interest and its properties
 % latLoc=42.3601; %Boston
 % lonLoc=-71.0589;
@@ -9,7 +9,7 @@ function [seleHurrGood,duraGood]=windRecordOneSite(latLoc,lonLoc,spd50y)
 threshold=spd50y/1.45; %10-min mean wind speed
 grad2sea=0.85;       %gradient to sea surface reduction factor (Vickery et al., 2009)
 sea2land=0.81;       %sea to land reduction factor for open terrain (the value need to be verified for this location)
-degTrans=0.77;       %the location is about 2km to the sea water
+% degTrans=0.77;       %the location is about 2km to the sea water
 VReduct=grad2sea*(1-(1-sea2land)*degTrans); %wind speed reduction factor
 
 rad = 250; %radius, consider hurricanes within 250 km of the location

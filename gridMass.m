@@ -73,3 +73,17 @@ for i=1:length(cenMassLon)
     filename=strcat('.\windRecordsMass\grid',num2str(i),'.mat');
     save(filename,'seleHurrGood','duraGood')
 end
+%% number of hurricanes for each grid
+numHurr=zeros(length(cenMassLon),1);
+for i=1:length(cenMassLon)
+    filename=strcat('.\windRecordsMass\grid',num2str(i),'.mat');
+    gridHurr=load(filename);
+    numHurr(i)=length(gridHurr.seleHurrGood);
+end
+
+meanNumHurr=mean(numHurr);
+figure
+histogram(numHurr,10);
+xlabel('Number of hurricanes')
+ylabel('Number of grids')
+title('Histogram of number of hurricanes for grids of Massachusetts')

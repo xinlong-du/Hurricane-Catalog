@@ -45,7 +45,7 @@ end
 r=deg2km(arclen); %distance between 1 and 2 is 22.2390km (0.2000rad); distance between 1 and 3 is 16.5008km (0.1484rad)
 %% prepare site properties
 %50-year MRI
-filename = '.\windRecordsMass\siteProperties.xlsx';
+filename = '.\assets\siteProperties.xlsx';
 % xlswrite(filename,[cenMassLat,cenMassLon],1,'A2')
 siteProp=xlsread(filename);
 spd50y=siteProp(:,3); %50-y MRI (m/s)
@@ -60,9 +60,9 @@ for i=1:1:numel(cenMassLat)
     [distFromCoastDeg(i),coastIndexes(i)] = min(dist);
 end
 distFromCoastKm=deg2km(distFromCoastDeg);
-filename = '.\windRecordsMass\degTrans3sGust.csv';
+filename = '.\assets\degTrans3sGust.csv';
 degTrans3s=csvread(filename);
-filename = '.\windRecordsMass\degTrans1hAverage.csv';
+filename = '.\assets\degTrans1hAverage.csv';
 degTrans1h=csvread(filename);
 degTransGrid3s=interp1(degTrans3s(:,1),degTrans3s(:,2),distFromCoastKm*1000);
 degTransGrid1h=interp1(degTrans1h(:,1),degTrans1h(:,2),distFromCoastKm*1000);

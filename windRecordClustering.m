@@ -8,8 +8,11 @@ load(filename);
 filename=strcat('.\windRecordsMass\windRecords2Dto1DrampGrid',num2str(j),'.txt');
 dlmwrite(filename,windRecords2Dto1Dramp,'delimiter','\t')
 
-% plot wind records
+% save hurricane IDs
 [nRow,nCol]=size(windRecords2Dto1Dramp);
+filename=strcat('.\windRecordsMass\hurricaneIDsGrid',num2str(j),'.txt');
+dlmwrite(filename,(1:nCol)')
+% plot wind records
 nStep=(nRow-1)/2;
 hfig=figure;
 for k=1:nCol

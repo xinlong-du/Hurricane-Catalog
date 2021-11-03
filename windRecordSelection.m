@@ -1,5 +1,6 @@
+clear;clc;
 %% load clusters
-fid=fopen('clusterList.txt');
+fid=fopen('.\windRecordsMass\clusterListGrid1.txt');
 line1=fgetl(fid);
 res=line1;
 while ischar(line1)
@@ -10,9 +11,13 @@ fclose(fid);
 for k=1:size(res,1)-1
   clusters{k}=str2num(res(k,:));
 end
+% load grids
+load('.\windRecordsMass\0MassGrids.mat');
+% load hurricanes
+load('.\windRecordsMass\grid1.mat');
 %% plot clustered hurricane tracks
-latLoc=41.776863;    %Transmission tower location 1
-lonLoc=-69.99792;
+latLoc=cenMassLat(1);    %Transmission tower location 1
+lonLoc=cenMassLon(1);
 rad = 250; %radius, consider hurricanes within 250 km of the location
 [latC,lonC] = scircle1(latLoc,lonLoc,km2deg(rad));
 
@@ -33,8 +38,11 @@ end
 plotm(latC,lonC,'b')
 plotm(latLoc,lonLoc,'bo')
 end
-%% select wind records from 4 clusters for IDA analysis
-nHurrCluster=[length(clusters{1}),length(clusters{2}),length(clusters{3}),length(clusters{4})];
+%% select wind records from each cluster for IDA analysis
+nHurrCluster=zeros(1,length(clusters));
+for i=1:length(clusters)
+    nHurrCluster(i)=length(clusters{i});
+end
 nSeleHurrCluster=round(nHurrCluster/10);
 duraCluster={};
 HurrCluster={};
@@ -49,7 +57,7 @@ for i=1:length(clusters)
     seleHurrCluster{i}=sortedHurrCluster{i}(1:nSeleHurrCluster(i));
     duraSeleCluster=[duraSeleCluster,dura(1:nSeleHurrCluster(i))];
 end
-%% plot sorted hurricanes (for validation, figures should be the same with those from lines 96-118)
+%% plot sorted hurricanes (for validation, figures should be the same with previous ones)
 for i=1:length(clusters)
 figure
 latlim = [35 45];

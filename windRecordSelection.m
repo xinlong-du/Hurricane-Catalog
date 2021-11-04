@@ -5,7 +5,8 @@ for i=1:length(cenMassLon)
 % coordinates of a grid
 latLoc=cenMassLat(i);
 lonLoc=cenMassLon(i);
-
+rad = 250; %radius, consider hurricanes within 250 km of the location
+[latC,lonC] = scircle1(latLoc,lonLoc,km2deg(rad));
 % load clusters
 filename=strcat('.\windRecordsMass\clusterListGrid',num2str(i),'.txt');
 fid=fopen(filename);
@@ -25,16 +26,15 @@ end
 filename=strcat('.\windRecordsMass\grid',num2str(i),'.mat');
 gridHurr=load(filename);
 
-PlotHurrTrackCluster(latLoc,lonLoc,clusters,gridHurr.seleHurrGood) %plot hurricane tracks
-[seleHurrCluster,sortedHurrCluster,duraSeleCluster]=SeleHurrCluster(clusters,gridHurr.seleHurrGood);
+PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,gridHurr.seleHurrGood) %plot hurricane tracks
+[seleHurrCluster,sortedHurrCluster,duraSeleCluster,nSeleHurrCluster]=SeleHurrCluster(clusters,gridHurr.seleHurrGood);
 filename=strcat('.\windRecordsMass\seleHurrClusterGrid',num2str(i),'.mat');
 save(filename,'seleHurrCluster')
+PlotSortedHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,sortedHurrCluster)
+PlotSeleHurr(latLoc,lonLoc,latC,lonC,duraSeleCluster,clusters,nSeleHurrCluster,seleHurrCluster)
 end
 %% plot clustered hurricane tracks
-function PlotHurrTrackCluster(latLoc,lonLoc,clusters,seleHurrGood)
-rad = 250; %radius, consider hurricanes within 250 km of the location
-[latC,lonC] = scircle1(latLoc,lonLoc,km2deg(rad));
-
+function PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,seleHurrGood)
 for i=1:length(clusters)
 figure
 latlim = [35 45];
@@ -54,7 +54,7 @@ plotm(latLoc,lonLoc,'bo')
 end
 end
 %% select wind records from each cluster for IDA analysis
-function [seleHurrCluster,sortedHurrCluster,duraSeleCluster]=SeleHurrCluster(clusters,seleHurrGood)
+function [seleHurrCluster,sortedHurrCluster,duraSeleCluster,nSeleHurrCluster]=SeleHurrCluster(clusters,seleHurrGood)
 nHurrCluster=zeros(1,length(clusters));
 for i=1:length(clusters)
     nHurrCluster(i)=length(clusters{i});
@@ -74,8 +74,8 @@ for i=1:length(clusters)
     duraSeleCluster=[duraSeleCluster,dura(1:nSeleHurrCluster(i))];
 end
 end
-%{
 %% plot sorted hurricanes (for validation, figures should be the same with previous ones)
+function PlotSortedHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,sortedHurrCluster)
 for i=1:length(clusters)
 figure
 latlim = [35 45];
@@ -92,7 +92,9 @@ end
 plotm(latC,lonC,'b')
 plotm(latLoc,lonLoc,'bo')
 end
+end
 %% plot the selected hurricanes
+function PlotSeleHurr(latLoc,lonLoc,latC,lonC,duraSeleCluster,clusters,nSeleHurrCluster,seleHurrCluster)
 figure
 histogram(duraSeleCluster/60.0,15)
 xlabel('Duration (h)')
@@ -135,7 +137,7 @@ for i=1:length(clusters)
         hold on
     end
 end
-%%
+
 for i=1:length(clusters)
     for j=1:nSeleHurrCluster(i)
         plotWind=seleHurrCluster{i}{j};
@@ -201,4 +203,4 @@ for i=1:length(clusters)
 %         title('Whole time history (Good)')
     end
 end
-%}
+end

@@ -1,6 +1,14 @@
 clear;clc;
-%% load clusters
-fid=fopen('.\windRecordsMass\clusterListGrid1.txt');
+%% select hurricanes from each cluster
+load('.\windRecordsMass\0MassGrids.mat'); % load grids
+for i=1:length(cenMassLon)
+% coordinates of a grid
+latLoc=cenMassLat(i);
+lonLoc=cenMassLon(i);
+
+% load clusters
+filename=strcat('.\windRecordsMass\clusterListGrid',num2str(i),'.txt');
+fid=fopen(filename);
 line1=fgetl(fid);
 res=line1;
 while ischar(line1)
@@ -8,16 +16,22 @@ line1=fgetl(fid);
 res=char(res,line1);
 end
 fclose(fid);
+clusters={};
 for k=1:size(res,1)-1
   clusters{k}=str2num(res(k,:));
 end
-% load grids
-load('.\windRecordsMass\0MassGrids.mat');
+
 % load hurricanes
-load('.\windRecordsMass\grid1.mat');
+filename=strcat('.\windRecordsMass\grid',num2str(i),'.mat');
+gridHurr=load(filename);
+
+PlotHurrTrackCluster(latLoc,lonLoc,clusters,gridHurr.seleHurrGood) %plot hurricane tracks
+[seleHurrCluster,sortedHurrCluster,duraSeleCluster]=SeleHurrCluster(clusters,gridHurr.seleHurrGood);
+filename=strcat('.\windRecordsMass\seleHurrClusterGrid',num2str(i),'.mat');
+save(filename,'seleHurrCluster')
+end
 %% plot clustered hurricane tracks
-latLoc=cenMassLat(1);    %Transmission tower location 1
-lonLoc=cenMassLon(1);
+function PlotHurrTrackCluster(latLoc,lonLoc,clusters,seleHurrGood)
 rad = 250; %radius, consider hurricanes within 250 km of the location
 [latC,lonC] = scircle1(latLoc,lonLoc,km2deg(rad));
 
@@ -38,7 +52,9 @@ end
 plotm(latC,lonC,'b')
 plotm(latLoc,lonLoc,'bo')
 end
+end
 %% select wind records from each cluster for IDA analysis
+function [seleHurrCluster,sortedHurrCluster,duraSeleCluster]=SeleHurrCluster(clusters,seleHurrGood)
 nHurrCluster=zeros(1,length(clusters));
 for i=1:length(clusters)
     nHurrCluster(i)=length(clusters{i});
@@ -57,6 +73,8 @@ for i=1:length(clusters)
     seleHurrCluster{i}=sortedHurrCluster{i}(1:nSeleHurrCluster(i));
     duraSeleCluster=[duraSeleCluster,dura(1:nSeleHurrCluster(i))];
 end
+end
+%{
 %% plot sorted hurricanes (for validation, figures should be the same with previous ones)
 for i=1:length(clusters)
 figure
@@ -183,3 +201,4 @@ for i=1:length(clusters)
 %         title('Whole time history (Good)')
     end
 end
+%}

@@ -26,12 +26,12 @@ end
 filename=strcat('.\windRecordsMass\grid',num2str(i),'.mat');
 gridHurr=load(filename);
 
-PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,gridHurr.seleHurrGood) %plot hurricane tracks
+% PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,gridHurr.seleHurrGood) %plot hurricane tracks
 [seleHurrCluster,sortedHurrCluster,duraSeleCluster,nSeleHurrCluster]=SeleHurrCluster(clusters,gridHurr.seleHurrGood);
 filename=strcat('.\windRecordsMass\seleHurrClusterGrid',num2str(i),'.mat');
 save(filename,'seleHurrCluster')
-PlotSortedHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,sortedHurrCluster)
-PlotSeleHurr(latLoc,lonLoc,latC,lonC,duraSeleCluster,clusters,nSeleHurrCluster,seleHurrCluster)
+% PlotSortedHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,sortedHurrCluster)
+% PlotSeleHurr(latLoc,lonLoc,latC,lonC,duraSeleCluster,clusters,nSeleHurrCluster,seleHurrCluster)
 end
 %% plot clustered hurricane tracks
 function PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,seleHurrGood)

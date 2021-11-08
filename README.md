@@ -5,15 +5,11 @@ Hurricane gradient wind speeds in every 10 minutes are generated based on Georgi
 An example of the calculated gradient wind speeds is shown as follows:  
 ![Alt text](/assets/Figure2.jpg)  
 ## Surface wind speeds
-Surface wind speeds at 10 meters height are calculated considering the gradient-surface transition and sea-land transition suggested by Vickery et al. (2009a). As an testbed, Massachusetts is divided into a set of grids and surface wind speed and direction records are calculated for each grid.  
+Surface wind speeds at 10 meters height are calculated considering the gradient-surface transition and sea-land transition suggested by Vickery et al. (2009a). The calculated wind speed and direction records of for a location of interest is shown in the following figures. It is seen that the pattern of hurricane wind speed and direction records are different for different hurricanes. If the location of interest is very close to the hurricane eye track, the wind speed record usually will have two peaks and the drop of the wind speed in the middle is due to the near zero wind speed in hurricane eye. On the contrary, if the location of interest is further from the hurricane eye track, the wind speed record will only have one peak.  
 ![Alt text](/assets/Figure3.jpg)  
-The calculated wind speed and direction records of a grid and the corresponding hurricane track is shown here. Note that hurricane winds are considered only when the location of interest is within 250 km of the hurricane eye according to Vickery et al. (2009b).  
 ![Alt text](/assets/Figure4.jpg)  
-![Alt text](/assets/Figure5.jpg)  
-![Alt text](/assets/Figure6.jpg)  
 
 References:  
 Georgiou, P. N. (1985). Design wind speeds in tropical cyclone-prone regions. Ph.D. dissertation. University of Western Ontario, London, Ontario, Canada.  
 Liu, F. (2014). Projections of future US design wind speeds and hurricane losses due to climate change. Ph.D. dissertation, Clemson University, Clemson, SC, USA.  
-Vickery, P. J., Wadhera, D., Powell, M. D., & Chen, Y. (2009a). A hurricane boundary layer and wind field model for use in engineering applications. Journal of Applied Meteorology and Climatology, 48(2), 381-405.  
-Vickery, P. J., Wadhera, D., Twisdale Jr, L. A., & Lavelle, F. M. (2009b). US hurricane wind speed risk and uncertainty. Journal of structural engineering, 135(3), 301-320.
+Vickery, P. J., Wadhera, D., Powell, M. D., & Chen, Y. (2009a). A hurricane boundary layer and wind field model for use in engineering applications. Journal of Applied Meteorology and Climatology, 48(2), 381-405.

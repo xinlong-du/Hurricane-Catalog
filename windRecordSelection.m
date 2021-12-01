@@ -1,6 +1,7 @@
 clear;clc;
 %% select hurricanes from each cluster
 load('.\windRecordsMass\0MassGrids.mat'); % load grids
+nClusters=zeros(length(cenMassLon),1);
 for i=1:length(cenMassLon)
 % coordinates of a grid
 latLoc=cenMassLat(i);
@@ -21,18 +22,26 @@ clusters={};
 for k=1:size(res,1)-1
   clusters{k}=str2num(res(k,:));
 end
+nClusters(i)=length(clusters);
 
 % load hurricanes
-filename=strcat('.\windRecordsMass\grid',num2str(i),'.mat');
-gridHurr=load(filename);
+% filename=strcat('.\windRecordsMass\grid',num2str(i),'.mat');
+% gridHurr=load(filename);
 
 % PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,gridHurr.seleHurrGood) %plot hurricane tracks
-[seleHurrCluster,sortedHurrCluster,duraSeleCluster,nSeleHurrCluster]=SeleHurrCluster(clusters,gridHurr.seleHurrGood);
-filename=strcat('.\windRecordsMass\seleHurrClusterGrid',num2str(i),'.mat');
-save(filename,'seleHurrCluster')
+% [seleHurrCluster,sortedHurrCluster,duraSeleCluster,nSeleHurrCluster]=SeleHurrCluster(clusters,gridHurr.seleHurrGood);
+% filename=strcat('.\windRecordsMass\seleHurrClusterGrid',num2str(i),'.mat');
+% save(filename,'seleHurrCluster')
 % PlotSortedHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,sortedHurrCluster)
 % PlotSeleHurr(latLoc,lonLoc,latC,lonC,duraSeleCluster,clusters,nSeleHurrCluster,seleHurrCluster)
 end
+
+meanNumClusters=mean(nClusters);
+figure
+histogram(nClusters,5);
+xlabel('Number of clusters')
+ylabel('Number of grids')
+title('Histogram of number of clusters for grids of Massachusetts')
 %% plot clustered hurricane tracks
 function PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,seleHurrGood)
 for i=1:length(clusters)

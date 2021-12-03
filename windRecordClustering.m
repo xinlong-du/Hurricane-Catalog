@@ -1,8 +1,22 @@
 clear;clc;
 %% load hurricanes for each grid
+numHurr=zeros(92,1);
 for j=1:92
 filename=strcat('.\windRecordsMass\grid',num2str(j),'.mat');
 load(filename);
+
+idxDel=[];
+for i=1:length(seleHurrGood)
+    if seleHurrGood{i}.NYR==1301 && seleHurrGood{i}.SIM==1
+        idxDel=i;
+    end
+end
+if ~isempty(idxDel)
+    duraGood(idxDel)=[];
+    seleHurrGood(idxDel)=[];
+end
+numHurr(j)=length(seleHurrGood);
+
 [maxDura,idx]=max(duraGood);
 [windRecords2Dto1Dramp]=flatten2Dto1Dramp(seleHurrGood,maxDura);
 filename=strcat('.\windRecordsMass\windRecords2Dto1DrampGrid',num2str(j),'.txt');
@@ -43,6 +57,12 @@ set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
 figname=strcat('.\windRecordsMass\figGrid',num2str(j),'.');
 print(hfig,[figname,'tif'],'-r800','-dtiff');
 end
+meanNumHurr=mean(numHurr);
+figure
+histogram(numHurr,10);
+xlabel('Number of hurricanes')
+ylabel('Number of grids')
+title('Histogram of number of hurricanes for grids of Massachusetts')
 %% flatten 2D wind to 1D and add ramp-up and ramp-down
 function [windRecords2Dto1Dramp]=flatten2Dto1Dramp(seleHurrGood,maxDura)
 windRecords2Dto1Dramp=zeros(maxDura/10*2+1+24,length(seleHurrGood));

@@ -27,42 +27,50 @@ dlmwrite(filename,windRecords2Dto1Dramp,'delimiter','\t')
 filename=strcat('.\windRecordsMass\hurricaneIDsGrid',num2str(j),'.txt');
 dlmwrite(filename,(1:nCol)')
 % plot wind records
-nStep=(nRow-1)/2;
-hfig=figure;
-for k=1:nCol
-    windNramp=windRecords2Dto1Dramp(2:nStep+1,k);
-    windEramp=windRecords2Dto1Dramp(nStep+2:end,k);
-    subplot(2,1,1)
-    plot(0:10:(nStep-1)*10,windNramp)
-    xlabel('Time (min)')
-    ylabel('Wind speed (m/s)')
-    hold on
-    subplot(2,1,2)
-    plot(0:10:(nStep-1)*10,windEramp)
-    xlabel('Time (min)')
-    ylabel('Wind speed (m/s)')
-    hold on
-end
-figname=strcat('Wind speeds in North direction for Grid',num2str(j));
-subplot(2,1,1)
-title(figname)
-figname=strcat('Wind speeds in East direction for Grid',num2str(j));
-subplot(2,1,2)
-title(figname)
-% save figure
-figWidth=6;
-figHeight=4;
-set(hfig,'PaperUnits','inches');
-set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
-figname=strcat('.\windRecordsMass\figGrid',num2str(j),'.');
-print(hfig,[figname,'tif'],'-r800','-dtiff');
+% nStep=(nRow-1)/2;
+% hfig=figure;
+% for k=1:nCol
+%     windNramp=windRecords2Dto1Dramp(2:nStep+1,k);
+%     windEramp=windRecords2Dto1Dramp(nStep+2:end,k);
+%     subplot(2,1,1)
+%     plot(0:10:(nStep-1)*10,windNramp)
+%     xlabel('Time (min)')
+%     ylabel('Wind speed (m/s)')
+%     hold on
+%     subplot(2,1,2)
+%     plot(0:10:(nStep-1)*10,windEramp)
+%     xlabel('Time (min)')
+%     ylabel('Wind speed (m/s)')
+%     hold on
+% end
+% figname=strcat('Wind speeds in North direction for Grid',num2str(j));
+% subplot(2,1,1)
+% title(figname)
+% figname=strcat('Wind speeds in East direction for Grid',num2str(j));
+% subplot(2,1,2)
+% title(figname)
+% % save figure
+% figWidth=6;
+% figHeight=4;
+% set(hfig,'PaperUnits','inches');
+% set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+% figname=strcat('.\windRecordsMass\figGrid',num2str(j),'.');
+% print(hfig,[figname,'tif'],'-r800','-dtiff');
 end
 meanNumHurr=mean(numHurr);
-figure
+hfig=figure;
 histogram(numHurr,10);
-xlabel('Number of hurricanes')
-ylabel('Number of grids')
-title('Histogram of number of hurricanes for grids of Massachusetts')
+xlabel('Number of hurricanes','FontSize',9)
+ylabel('Number of grids','FontSize',9)
+set(gca,'FontSize',9)
+%title('Histogram of number of hurricanes for grids of Massachusetts')
+% save histogram
+figWidth=3.5;
+figHeight=3;
+set(hfig,'PaperUnits','inches');
+set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+figname=('.\assets\Fig8.'); %Fig. 8 in the paper
+print(hfig,[figname,'tif'],'-r800','-dtiff');
 %% flatten 2D wind to 1D and add ramp-up and ramp-down
 function [windRecords2Dto1Dramp]=flatten2Dto1Dramp(seleHurrGood,maxDura)
 windRecords2Dto1Dramp=zeros(maxDura/10*2+1+24,length(seleHurrGood));

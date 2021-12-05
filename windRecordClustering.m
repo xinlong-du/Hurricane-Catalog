@@ -59,7 +59,7 @@ dlmwrite(filename,(1:nCol)')
 end
 meanNumHurr=mean(numHurr);
 hfig=figure;
-histogram(numHurr,10);
+histogram(numHurr,10,'FaceColor','none');
 xlabel('Number of hurricanes','FontSize',9)
 ylabel('Number of grids','FontSize',9)
 set(gca,'FontSize',9)
@@ -70,7 +70,7 @@ figHeight=3;
 set(hfig,'PaperUnits','inches');
 set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
 figname=('.\assets\Fig8.'); %Fig. 8 in the paper
-print(hfig,[figname,'tif'],'-r800','-dtiff');
+print(hfig,[figname,'tif'],'-r400','-dtiff');
 %% flatten 2D wind to 1D and add ramp-up and ramp-down
 function [windRecords2Dto1Dramp]=flatten2Dto1Dramp(seleHurrGood,maxDura)
 windRecords2Dto1Dramp=zeros(maxDura/10*2+1+24,length(seleHurrGood));

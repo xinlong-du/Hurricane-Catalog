@@ -51,12 +51,49 @@ for j=1:nLatiGrid
     end
 end
 %% plot wind field
-figure
-contourf(longGrid,latiGrid,V,0:5:60,'ShowText','on')
+hfig=figure;
+[C,h]=contourf(longGrid,latiGrid,V,0:5:60,'ShowText','on');
+clabel(C,h,'FontSize',8);
 axis equal
-xlabel('Longitude')
-ylabel('Latitude')
+xlabel('Longitude','FontSize',8)
+ylabel('Latitude','FontSize',8)
+set(gca,'FontSize',8)
 % hold on
 % quiver(longGrid,latiGrid,sin(dir),cos(dir))
-%% check wind directions
+
+% check wind directions
 dirDeg=rad2deg(dir);
+
+% save histogram
+figWidth=3.5;
+figHeight=3.5;
+set(hfig,'PaperUnits','inches');
+set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+figname=('.\assets\Fig2.'); %Fig. 2 in the paper
+print(hfig,[figname,'jpg'],'-r350','-djpeg');
+
+%% plot hurricane tracks
+hfig=figure;
+latlim = [10 70];
+lonlim = [-110 10];
+worldmap(latlim,lonlim)
+load coastlines
+plotm(coastlat,coastlon)
+geoshow(coastlat,coastlon,'color','k')
+hold on
+for i=1:3
+    N=length(hurr10000.NYRSimHur(i).SimHur);
+    for j=1:N
+        latHurrj=hurr10000.NYRSimHur(i).SimHur(j).Lat;
+        lonHurrj=hurr10000.NYRSimHur(i).SimHur(j).Lon;
+        plotm(latHurrj,lonHurrj,'r')
+    end
+end
+setm(gca,'FontSize',8)
+% save histogram
+figWidth=3.5;
+figHeight=2.5;
+set(hfig,'PaperUnits','inches');
+set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+figname=('.\assets\Fig1.'); %Fig. 1 in the paper
+print(hfig,[figname,'jpg'],'-r350','-djpeg');

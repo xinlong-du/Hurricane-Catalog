@@ -17,15 +17,15 @@ if ~isempty(idxDel)
 end
 numHurr(j)=length(seleHurrGood);
 
-[maxDura,idx]=max(duraGood);
-[windRecords2Dto1Dramp]=flatten2Dto1Dramp(seleHurrGood,maxDura);
-filename=strcat('.\windRecordsMass\windRecords2Dto1DrampGrid',num2str(j),'.txt');
-dlmwrite(filename,windRecords2Dto1Dramp,'delimiter','\t')
-
-% save hurricane IDs
-[nRow,nCol]=size(windRecords2Dto1Dramp);
-filename=strcat('.\windRecordsMass\hurricaneIDsGrid',num2str(j),'.txt');
-dlmwrite(filename,(1:nCol)')
+% [maxDura,idx]=max(duraGood);
+% [windRecords2Dto1Dramp]=flatten2Dto1Dramp(seleHurrGood,maxDura);
+% filename=strcat('.\windRecordsMass\windRecords2Dto1DrampGrid',num2str(j),'.txt');
+% dlmwrite(filename,windRecords2Dto1Dramp,'delimiter','\t')
+% 
+% % save hurricane IDs
+% [nRow,nCol]=size(windRecords2Dto1Dramp);
+% filename=strcat('.\windRecordsMass\hurricaneIDsGrid',num2str(j),'.txt');
+% dlmwrite(filename,(1:nCol)')
 % plot wind records
 % nStep=(nRow-1)/2;
 % hfig=figure;
@@ -60,9 +60,9 @@ end
 meanNumHurr=mean(numHurr);
 hfig=figure;
 histogram(numHurr,10,'FaceColor','none');
-xlabel('Number of hurricanes','FontSize',9)
-ylabel('Number of grids','FontSize',9)
-set(gca,'FontSize',9)
+xlabel('Number of hurricanes','FontSize',8)
+ylabel('Number of grids','FontSize',8)
+set(gca,'FontSize',8)
 %title('Histogram of number of hurricanes for grids of Massachusetts')
 % save histogram
 figWidth=3.5;
@@ -70,7 +70,7 @@ figHeight=3;
 set(hfig,'PaperUnits','inches');
 set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
 figname=('.\assets\Fig8.'); %Fig. 8 in the paper
-print(hfig,[figname,'tif'],'-r400','-dtiff');
+print(hfig,[figname,'jpg'],'-r350','-djpeg');
 %% flatten 2D wind to 1D and add ramp-up and ramp-down
 function [windRecords2Dto1Dramp]=flatten2Dto1Dramp(seleHurrGood,maxDura)
 windRecords2Dto1Dramp=zeros(maxDura/10*2+1+24,length(seleHurrGood));

@@ -1,5 +1,13 @@
 clear;clc;
-load('.\windRecordsMass\Grid44.mat');
+load('.\windRecordsMass\0MassGrids.mat'); % load grids
+GridID=79; %tried 44, 91, 59
+latLoc=cenMassLat(GridID);    %Grid coordinates
+lonLoc=cenMassLon(GridID);
+rad = 250; %radius, consider hurricanes within 250 km of the location
+[latC,lonC] = scircle1(latLoc,lonLoc,km2deg(rad));
+
+filename=strcat('.\windRecordsMass\Grid',num2str(GridID),'.mat');
+load(filename);
 idxDel=[]; % should be 31 for Grid44
 for i=1:length(seleHurrGood)
     if seleHurrGood{i}.NYR==1301 && seleHurrGood{i}.SIM==1
@@ -10,11 +18,6 @@ if ~isempty(idxDel)
     duraGood(idxDel)=[];
     seleHurrGood(idxDel)=[];
 end
-
-latLoc=42.7;    %Grid44
-lonLoc=-71.5;
-rad = 250; %radius, consider hurricanes within 250 km of the location
-[latC,lonC] = scircle1(latLoc,lonLoc,km2deg(rad));
 %% histogram of good duration 
 meanDura=mean(duraGood/60.0); %convert to hours
 figure
@@ -22,6 +25,7 @@ histogram(duraGood/60.0,10,'Normalization','probability')
 xlabel('Duration (h)')
 ylabel('Probability')
 title('Duration considering hurricane eyes within 250 km')
+%{
 %% plot good records
 %[two peak 138 154 165 184 199 192] 
 %[one peak 136 152 191 174 171 48 33] 43 32
@@ -50,7 +54,7 @@ for i=[183 170 43]%1:length(seleHurrGood)[183 151 190] [183 171 43]
     hold on
     plotm(plotWind.latIn250,plotWind.lonIn250,'r')
     plotm(latC,lonC,'b')
-    plotm(latLoc,lonLoc,'bo')
+    plotm(latLoc,lonLoc,'b.')
     
     subplot(2,2,2) %time history within 250km
     yyaxis left
@@ -75,4 +79,43 @@ for i=[183 170 43]%1:length(seleHurrGood)[183 151 190] [183 171 43]
     ylabel('wind speed in East (m/s)')
     ylim([-40 40])
     title('Time history with in 250km (Cartesian)')
+end
+%}
+%% plot clustered hurricanes
+% load clusters
+filename=strcat('.\windRecordsMass\clusterListGrid',num2str(GridID),'.txt');
+fid=fopen(filename);
+line1=fgetl(fid);
+res=line1;
+while ischar(line1)
+line1=fgetl(fid);
+res=char(res,line1);
+end
+fclose(fid);
+clusters={};
+for k=1:size(res,1)-1
+  clusters{k}=str2num(res(k,:));
+end
+nClusters=length(clusters);
+PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,seleHurrGood) %plot hurricane tracks
+
+% plot clustered hurricane tracks
+function PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,seleHurrGood)
+for i=1:length(clusters)
+figure
+latlim = [35 45];
+lonlim = [-80 -60];
+worldmap(latlim,lonlim)
+load coastlines
+plotm(coastlat,coastlon)
+geoshow(coastlat,coastlon,'color','k')
+hold on
+for j=1:length(clusters{i})
+    idxHurr=clusters{i}(j);
+    plotWind=seleHurrGood{idxHurr};
+    plotm(plotWind.latIn250,plotWind.lonIn250,'r')
+end
+plotm(latC,lonC,'b')
+plotm(latLoc,lonLoc,'b.')
+end
 end

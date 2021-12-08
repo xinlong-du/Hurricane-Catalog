@@ -1,21 +1,32 @@
 clear;clc;
 load('.\windRecordsMass\Grid44.mat');
+idxDel=[]; % should be 31 for Grid44
+for i=1:length(seleHurrGood)
+    if seleHurrGood{i}.NYR==1301 && seleHurrGood{i}.SIM==1
+        idxDel=i;
+    end
+end
+if ~isempty(idxDel)
+    duraGood(idxDel)=[];
+    seleHurrGood(idxDel)=[];
+end
+
 latLoc=42.7;    %Grid44
 lonLoc=-71.5;
 rad = 250; %radius, consider hurricanes within 250 km of the location
 [latC,lonC] = scircle1(latLoc,lonLoc,km2deg(rad));
 %% histogram of good duration 
-% meanDura=mean(duraGood/60.0); %convert to hours
-% figure
-% histogram(duraGood/60.0,20,'Normalization','probability')
-% xlabel('Duration (h)')
-% ylabel('Probability')
-% title('Duration considering hurricane eyes within 250 km')
+meanDura=mean(duraGood/60.0); %convert to hours
+figure
+histogram(duraGood/60.0,10,'Normalization','probability')
+xlabel('Duration (h)')
+ylabel('Probability')
+title('Duration considering hurricane eyes within 250 km')
 %% plot good records
 %[two peak 138 154 165 184 199 192] 
-%[one peak 136 152 191 174 171]
+%[one peak 136 152 191 174 171 48 33] 43 32
 %[other not typical patterns 137
-for i=1:length(seleHurrGood)
+for i=[183 170 43]%1:length(seleHurrGood)[183 151 190] [183 171 43]
     plotWind=seleHurrGood{i};
     figure
     subplot(2,2,1) %whole track

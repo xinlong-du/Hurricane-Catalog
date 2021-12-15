@@ -1,6 +1,6 @@
 clear;clc;
 load('.\windRecordsMass\0MassGrids.mat'); % load grids
-GridID=79; %tried 44, 91, 59
+GridID=86; %tried 44, 91, 59
 latLoc=cenMassLat(GridID);    %Grid coordinates
 lonLoc=cenMassLon(GridID);
 rad = 250; %radius, consider hurricanes within 250 km of the location
@@ -25,12 +25,16 @@ histogram(duraGood/60.0,10,'Normalization','probability')
 xlabel('Duration (h)')
 ylabel('Probability')
 title('Duration considering hurricane eyes within 250 km')
-%{
+
 %% plot good records
-%[two peak 138 154 165 184 199 192] 
-%[one peak 136 152 191 174 171 48 33] 43 32
-%[other not typical patterns 137
-for i=[183 170 43]%1:length(seleHurrGood)[183 151 190] [183 171 43]
+% two peak [157,146,142,137,124,99, 84]
+%          [450,650,950,600,550,450,1000] duration (min)
+% one peak West [162,161,159,156,153,151,148,133,127]
+%               [550,550,700,275,650,300,550,550,750]
+% one peak East [154,152,132, 130, 85]
+%               [550,600,1200,1000,700]
+% other not typical patterns [117]
+for i=[84 151 85]%1:length(seleHurrGood)
     plotWind=seleHurrGood{i};
     figure
     subplot(2,2,1) %whole track
@@ -80,10 +84,10 @@ for i=[183 170 43]%1:length(seleHurrGood)[183 151 190] [183 171 43]
     ylim([-40 40])
     title('Time history with in 250km (Cartesian)')
 end
-%}
+
 %% plot clustered hurricanes
 % load clusters
-filename=strcat('.\windRecordsMass\clusterListGrid',num2str(GridID),'.txt');
+filename=strcat('C:\Users\xinlo\OneDrive - Northeastern University\CRISP\Repositories\Hurricane Catalog\HurricaneClustering\data\windRecordsMass\clusterListGrid',num2str(GridID),'.txt');
 fid=fopen(filename);
 line1=fgetl(fid);
 res=line1;

@@ -19,13 +19,20 @@ if ~isempty(idxDel)
     seleHurrGood(idxDel)=[];
 end
 %% histogram of good duration 
-meanDura=mean(duraGood/60.0); %convert to hours
-figure
-histogram(duraGood/60.0,10,'Normalization','probability')
-xlabel('Duration (h)')
-ylabel('Probability')
-title('Duration considering hurricane eyes within 250 km')
-
+meanDura=mean(duraGood/60.0+2); %convert to hours and consider ramp-up and ramp-down
+hfig=figure;
+histogram(duraGood/60.0,10,'Normalization','probability','FaceColor','none')
+xlabel('Duration (h)','FontSize',8,'FontName','Times New Roman')
+ylabel('Probability','FontSize',8,'FontName','Times New Roman')
+set(gca,'FontSize',8,'FontName','Times New Roman')
+%title('Duration considering hurricane eyes within 250 km')
+% save histogram
+figWidth=3.5;
+figHeight=3;
+set(hfig,'PaperUnits','inches');
+set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+figname=('.\assets\Fig7.'); %Fig. 8 in the paper
+print(hfig,[figname,'jpg'],'-r1000','-djpeg');
 %% plot good records
 % two peak [157,146,142,137,124,99, 84]
 %          [450,650,950,600,550,450,1000] duration (min)
@@ -34,10 +41,11 @@ title('Duration considering hurricane eyes within 250 km')
 % one peak East [154,152,132, 130, 85]
 %               [550,600,1200,1000,700]
 % other not typical patterns [117]
+j=3;
 for i=[84 151 85]%1:length(seleHurrGood)
     plotWind=seleHurrGood{i};
-    figure
-    subplot(2,2,1) %whole track
+    
+    hfig=figure; %whole track 
     latlim = [10 70];
     lonlim = [-110 10];
     worldmap(latlim,lonlim)
@@ -47,8 +55,16 @@ for i=[84 151 85]%1:length(seleHurrGood)
     hold on
     plotm(plotWind.latIn,plotWind.lonIn,'r')
     plotm(latC,lonC,'b')
+    setm(gca,'FontSize',8,'FontName','Times New Roman')
+    % save histogram
+    figWidth=3.5;
+    figHeight=2.5;
+    set(hfig,'PaperUnits','inches');
+    set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+    figname=strcat('.\assets\Fig',num2str(j),'(a).');
+    print(hfig,[figname,'jpg'],'-r500','-djpeg');
     
-    subplot(2,2,3) %track within 250km
+    hfig=figure; %track within 250km
     latlim = [36 46];
     lonlim = [-80 -60];
     worldmap(latlim,lonlim)
@@ -59,30 +75,71 @@ for i=[84 151 85]%1:length(seleHurrGood)
     plotm(plotWind.latIn250,plotWind.lonIn250,'r')
     plotm(latC,lonC,'b')
     plotm(latLoc,lonLoc,'b.')
+    setm(gca,'FontSize',8,'FontName','Times New Roman')
+    gridm('mlinelocation',5,'MLabelLocation',5,'plinelocation',5,'PLabelLocation',5)
+    % save histogram
+    figWidth=3.5;
+    figHeight=2.5;
+    set(hfig,'PaperUnits','inches');
+    set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+    figname=strcat('.\assets\Fig',num2str(j),'(b).');
+    print(hfig,[figname,'jpg'],'-r500','-djpeg');
     
-    subplot(2,2,2) %time history within 250km
+    hfig=figure; %time history within 250km
     yyaxis left
     plot(plotWind.tIn250,plotWind.VIn250)
-    xlabel('time (min)')
-    ylabel('wind speed (m/s)')
+    xlabel('Time (min)','FontSize',8,'FontName','Times New Roman')
+    ylabel('Wind speed (m/s)','FontSize',8,'FontName','Times New Roman')
     ylim([0 50])
     yyaxis right
-    plot(plotWind.tIn250,plotWind.dirIn250)
-    ylabel('wind direction (rad)')
+    plot(plotWind.tIn250,plotWind.dirIn250,'--')
+    ylabel('Wind direction (rad)')
     ylim([0 2*pi])
-    title('Time history with in 250km (Polar)')
+    if j==4
+        legend({'Wind speed','Wind dir.'},'FontSize',8,'FontName','Times New Roman','Location','northeast')
+    else
+        legend({'Wind speed','Wind dir.'},'FontSize',8,'FontName','Times New Roman','Location','southwest')
+    end
+    legend('boxoff')
+    %title('Time history with in 250km (Polar)')
+    set(gca,'FontSize',8,'FontName','Times New Roman')
+    % save histogram
+    figWidth=3.5;
+    figHeight=2.0;
+    set(hfig,'PaperUnits','inches');
+    set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+    figname=strcat('.\assets\Fig',num2str(j),'(c).');
+    print(hfig,[figname,'jpg'],'-r500','-djpeg');
     
-    subplot(2,2,4) %time history within 250km
+    hfig=figure; %time history within 250km
     yyaxis left
     plot(plotWind.tIn250,plotWind.VIn250N)
-    xlabel('time (min)')
-    ylabel('wind speed in North (m/s)')
+    xlabel('Time (min)','FontSize',8,'FontName','Times New Roman')
+    ylabel('Wind speed (m/s)','FontSize',8,'FontName','Times New Roman')
     ylim([-40 40])
     yyaxis right
-    plot(plotWind.tIn250,plotWind.VIn250E)
-    ylabel('wind speed in East (m/s)')
+    plot(plotWind.tIn250,plotWind.VIn250E,'--')
+    ylabel('Wind speed (m/s)')
     ylim([-40 40])
-    title('Time history with in 250km (Cartesian)')
+    if j==3
+        legend({'North dir.','East dir.'},'FontSize',8,'FontName','Times New Roman','Location','west')
+    elseif j==4
+        legend({'North dir.','East dir.'},'FontSize',8,'FontName','Times New Roman','Location','southeast')
+    else
+        legend({'North dir.','East dir.'},'FontSize',8,'FontName','Times New Roman','Location','northwest')
+    end
+    legend('boxoff')
+    %title('Time history with in 250km (Cartesian)')
+    set(gca,'FontSize',8,'FontName','Times New Roman')
+    % save histogram
+    figWidth=3.5;
+    figHeight=2.0;
+    set(hfig,'PaperUnits','inches');
+    set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+    figname=strcat('.\assets\Fig',num2str(j),'(d).');
+    print(hfig,[figname,'jpg'],'-r500','-djpeg');
+    
+    j=j+1;
 end
 
 %% plot clustered hurricanes

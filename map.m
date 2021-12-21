@@ -53,11 +53,11 @@ end
 %% plot wind field
 hfig=figure;
 [C,h]=contourf(longGrid,latiGrid,V,0:5:60,'ShowText','on');
-clabel(C,h,'FontSize',8);
+clabel(C,h,'FontSize',8,'FontName','Times New Roman');
 axis equal
-xlabel('Longitude','FontSize',8)
-ylabel('Latitude','FontSize',8)
-set(gca,'FontSize',8)
+xlabel('Longitude','FontSize',8,'FontName','Times New Roman')
+ylabel('Latitude','FontSize',8,'FontName','Times New Roman')
+set(gca,'FontSize',8,'FontName','Times New Roman')
 % hold on
 % quiver(longGrid,latiGrid,sin(dir),cos(dir))
 
@@ -70,7 +70,7 @@ figHeight=3.5;
 set(hfig,'PaperUnits','inches');
 set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
 figname=('.\assets\Fig2.'); %Fig. 2 in the paper
-print(hfig,[figname,'jpg'],'-r350','-djpeg');
+print(hfig,[figname,'jpg'],'-r500','-djpeg');
 
 %% plot hurricane tracks
 hfig=figure;
@@ -89,11 +89,11 @@ for i=1:3
         plotm(latHurrj,lonHurrj,'r')
     end
 end
-setm(gca,'FontSize',8)
+setm(gca,'FontSize',8,'FontName','Times New Roman')
 % save histogram
 figWidth=3.5;
 figHeight=2.5;
 set(hfig,'PaperUnits','inches');
 set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
 figname=('.\assets\Fig1.'); %Fig. 1 in the paper
-print(hfig,[figname,'jpg'],'-r350','-djpeg');
+print(hfig,[figname,'jpg'],'-r500','-djpeg');

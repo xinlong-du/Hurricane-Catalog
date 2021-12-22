@@ -1,6 +1,6 @@
 clear;clc;
 %% make grids on Massachusetts
-figure
+hfig=figure;
 massachusetts = shaperead('usastatehi',...
    'UseGeoCoords',true,...
    'Selector',{@(name) strcmpi(name,'Massachusetts'),'Name'});
@@ -8,14 +8,15 @@ latlim = [41 43];
 lonlim = [-74 -69];
 ax=usamap(latlim,lonlim);
 geoshow(massachusetts,'FaceColor','none')
+setm(gca,'FontSize',8,'FontName','Times New Roman')
 gridm('on');
-gridm('mlinelocation',0.2,'plinelocation',0.2,'GColor','k','GLineWidth',1,'GLineStyle',':')
+gridm('mlinelocation',0.2,'MLabelLocation',1,'plinelocation',0.2,'PLabelLocation',1,'GColor','k','GLineWidth',0.5,'GLineStyle',':')
 hold on
 %% find centroid of each grid
 cenLat=41+0.1:0.2:43-0.1;
 cenLon=-74+0.1:0.2:-69-0.1;
 [cenLatMesh,cenLonMesh]=meshgrid(cenLat,cenLon);
-plotm(cenLatMesh,cenLonMesh,'r*')
+plotm(cenLatMesh,cenLonMesh,'r.','MarkerSize',5)
 %% find grids for Massachusetts
 lonID=[];
 latID=[];
@@ -39,10 +40,17 @@ cenMassLon=zeros(length(lonID),1);
 for i=1:length(lonID)
     cenMassLat(i)=cenLatMesh(lonID(i),latID(i));
     cenMassLon(i)=cenLonMesh(lonID(i),latID(i));
-    plotm(cenMassLat(i),cenMassLon(i),'b*')
+    plotm(cenMassLat(i),cenMassLon(i),'b.','MarkerSize',5)
 end
 [arclen,az] = distance(cenMassLat(1),cenMassLon(1),cenMassLat(2),cenMassLon(2));
 r=deg2km(arclen); %distance between 1 and 2 is 22.2390km (0.2000rad); distance between 1 and 3 is 16.5008km (0.1484rad)
+% save histogram
+figWidth=3.5;
+figHeight=2.5;
+set(hfig,'PaperUnits','inches');
+set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+figname=('.\assets\Fig8.');
+print(hfig,[figname,'jpg'],'-r500','-djpeg');
 %% prepare site properties
 %50-year MRI
 filename = '.\assets\siteProperties.xlsx';

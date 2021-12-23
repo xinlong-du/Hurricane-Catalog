@@ -163,7 +163,7 @@ PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,seleHurrGood) %plot hurric
 % plot clustered hurricane tracks
 function PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,seleHurrGood)
 for i=1:length(clusters)
-figure
+hfig=figure;
 latlim = [35 45];
 lonlim = [-80 -60];
 worldmap(latlim,lonlim)
@@ -178,5 +178,14 @@ for j=1:length(clusters{i})
 end
 plotm(latC,lonC,'b')
 plotm(latLoc,lonLoc,'b.')
+setm(gca,'FontSize',8,'FontName','Times New Roman')
+gridm('mlinelocation',5,'MLabelLocation',5,'plinelocation',5,'PLabelLocation',5)
+% save histogram
+figWidth=3.5;
+figHeight=2.3;
+set(hfig,'PaperUnits','inches');
+set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+figname=strcat('.\assets\Fig',num2str(i+14),'(b).');
+print(hfig,[figname,'jpg'],'-r500','-djpeg');
 end
 end

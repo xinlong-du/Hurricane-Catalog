@@ -9,7 +9,7 @@ lonLoc=cenMassLon(i);
 rad = 250; %radius, consider hurricanes within 250 km of the location
 [latC,lonC] = scircle1(latLoc,lonLoc,km2deg(rad));
 % load clusters
-filename=strcat('.\windRecordsMass\clusterListGrid',num2str(i),'.txt');
+filename=strcat('..\HurricaneClustering\data\windRecordsMass\clusterListSeleGrid',num2str(i),'.txt');
 fid=fopen(filename);
 line1=fgetl(fid);
 res=line1;

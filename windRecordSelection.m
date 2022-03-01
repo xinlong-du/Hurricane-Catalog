@@ -2,6 +2,7 @@ clear;clc;
 %% select hurricanes from each cluster
 load('.\windRecordsMass\0MassGrids.mat'); % load grids
 nClusters=zeros(length(cenMassLon),1);
+numHurr=zeros(length(cenMassLon),1);
 for i=1:length(cenMassLon)
 % coordinates of a grid
 latLoc=cenMassLat(i);
@@ -25,85 +26,51 @@ end
 nClusters(i)=length(clusters);
 
 % load hurricanes
-% filename=strcat('.\windRecordsMass\grid',num2str(i),'.mat');
-% gridHurr=load(filename);
-
-% PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,gridHurr.seleHurrGood) %plot hurricane tracks
-% [seleHurrCluster,sortedHurrCluster,duraSeleCluster,nSeleHurrCluster]=SeleHurrCluster(clusters,gridHurr.seleHurrGood);
-% filename=strcat('.\windRecordsMass\seleHurrClusterGrid',num2str(i),'.mat');
-% save(filename,'seleHurrCluster')
-% PlotSortedHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,sortedHurrCluster)
-% PlotSeleHurr(latLoc,lonLoc,latC,lonC,duraSeleCluster,clusters,nSeleHurrCluster,seleHurrCluster)
-end
-
-meanNumClusters=mean(nClusters);
-figure
-histogram(nClusters,5);
-xlabel('Number of clusters')
-ylabel('Number of grids')
-title('Histogram of number of clusters for grids of Massachusetts')
-%% plot clustered hurricane tracks
-function PlotHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,seleHurrGood)
-for i=1:length(clusters)
-figure
-latlim = [35 45];
-lonlim = [-80 -60];
-worldmap(latlim,lonlim)
-load coastlines
-plotm(coastlat,coastlon)
-geoshow(coastlat,coastlon,'color','k')
-hold on
-for j=1:length(clusters{i})
-    idxHurr=clusters{i}(j);
-    plotWind=seleHurrGood{idxHurr};
-    plotm(plotWind.latIn250,plotWind.lonIn250,'r')
-end
-plotm(latC,lonC,'b')
-plotm(latLoc,lonLoc,'bo')
-end
-end
-%% select wind records from each cluster for IDA analysis
-function [seleHurrCluster,sortedHurrCluster,duraSeleCluster,nSeleHurrCluster]=SeleHurrCluster(clusters,seleHurrGood)
-nHurrCluster=zeros(1,length(clusters));
-for i=1:length(clusters)
-    nHurrCluster(i)=length(clusters{i});
-end
-nSeleHurrCluster=round(nHurrCluster/10);
-duraCluster={};
-HurrCluster={};
-duraSeleCluster=[];
-for i=1:length(clusters)
-    for j=1:length(clusters{i})
-        HurrCluster{i}{j}=seleHurrGood{clusters{i}(j)};
-        duraCluster{i}(j)=seleHurrGood{clusters{i}(j)}.dura250;
+filename=strcat('.\windRecordsMass\grid',num2str(i),'.mat');
+load(filename);
+idxDel=[];
+for j=1:length(seleHurrGood)
+    if seleHurrGood{j}.NYR==1301 && seleHurrGood{j}.SIM==1
+        idxDel=j;
     end
-    [dura,idx]=sort(duraCluster{i});
-    sortedHurrCluster{i}=HurrCluster{i}(idx); %sort the hurricanes by duration
-    seleHurrCluster{i}=sortedHurrCluster{i}(1:nSeleHurrCluster(i));
-    duraSeleCluster=[duraSeleCluster,dura(1:nSeleHurrCluster(i))];
 end
+if ~isempty(idxDel)
+    duraGood(idxDel)=[];
+    seleHurrGood(idxDel)=[];
 end
-%% plot sorted hurricanes (for validation, figures should be the same with previous ones)
-function PlotSortedHurrTrackCluster(latLoc,lonLoc,latC,lonC,clusters,sortedHurrCluster)
-for i=1:length(clusters)
-figure
-latlim = [35 45];
-lonlim = [-80 -60];
-worldmap(latlim,lonlim)
-load coastlines
-plotm(coastlat,coastlon)
-geoshow(coastlat,coastlon,'color','k')
-hold on
-for j=1:length(clusters{i})
-    plotWind=sortedHurrCluster{i}{j};
-    plotm(plotWind.latIn250,plotWind.lonIn250,'r')
+numHurr(i)=length(seleHurrGood);
+
+duraSeleCluster=[];
+for j=1:length(clusters)
+    for k=1:length(clusters{j})
+        seleHurrCluster{j}{k}=seleHurrGood{clusters{j}(k)};
+        duraSeleCluster=[duraSeleCluster;seleHurrGood{clusters{j}(k)}.dura250];
+    end
 end
-plotm(latC,lonC,'b')
-plotm(latLoc,lonLoc,'bo')
+
+filename=strcat('.\windRecordsMass\seleHurrClusterGrid',num2str(i),'.mat');
+save(filename,'seleHurrCluster')
+%PlotSeleHurr(latLoc,lonLoc,latC,lonC,seleHurrCluster,duraSeleCluster,clusters)
 end
-end
+
+%% plot histogram for number of cluesters of all grids
+meanNumClusters=mean(nClusters);
+hfig=figure;
+histogram(nClusters,'FaceColor','none');
+set(gca,'XTick',(4:1:8))
+set(gca,'FontSize',8,'FontName','Times New Roman')
+xlabel('Number of clusters','FontSize',8,'FontName','Times New Roman')
+ylabel('Number of grids','FontSize',8,'FontName','Times New Roman')
+% save histogram
+figWidth=3.5;
+figHeight=3;
+set(hfig,'PaperUnits','inches');
+set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
+figname=('.\assets\Fig23.');
+print(hfig,[figname,'jpg'],'-r1000','-djpeg');
+
 %% plot the selected hurricanes
-function PlotSeleHurr(latLoc,lonLoc,latC,lonC,duraSeleCluster,clusters,nSeleHurrCluster,seleHurrCluster)
+function PlotSeleHurr(latLoc,lonLoc,latC,lonC,seleHurrCluster,duraSeleCluster,clusters)
 figure
 histogram(duraSeleCluster/60.0,15)
 xlabel('Duration (h)')
@@ -119,7 +86,7 @@ for i=1:length(clusters)
     plotm(coastlat,coastlon)
     geoshow(coastlat,coastlon,'color','k')
     hold on
-    for j=1:nSeleHurrCluster(i)
+    for j=1:length(clusters{i})
         plotWind=seleHurrCluster{i}{j};
         plotm(plotWind.latIn250,plotWind.lonIn250,'r')
     end
@@ -128,7 +95,7 @@ for i=1:length(clusters)
     
     figure
     subplot(2,1,1) %time history within 250km
-    for j=1:nSeleHurrCluster(i)
+    for j=1:length(clusters{i})
         plotWind=seleHurrCluster{i}{j};
         plot(plotWind.tIn250,plotWind.VIn250N)
         xlabel('time (min)')
@@ -137,7 +104,7 @@ for i=1:length(clusters)
         hold on
     end
     subplot(2,1,2) %time history within 250km
-    for j=1:nSeleHurrCluster(i)
+    for j=1:length(clusters{i})
         plotWind=seleHurrCluster{i}{j};
         plot(plotWind.tIn250,plotWind.VIn250E)
         xlabel('time (min)')
@@ -148,7 +115,7 @@ for i=1:length(clusters)
 end
 
 for i=1:length(clusters)
-    for j=1:nSeleHurrCluster(i)
+    for j=1:length(clusters{i})
         plotWind=seleHurrCluster{i}{j};
         figure
         subplot(2,2,1) %whole track

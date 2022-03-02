@@ -41,6 +41,7 @@ end
 numHurr(i)=length(seleHurrGood);
 
 duraSeleCluster=[];
+seleHurrCluster={};
 for j=1:length(clusters)
     for k=1:length(clusters{j})
         seleHurrCluster{j}{k}=seleHurrGood{clusters{j}(k)};

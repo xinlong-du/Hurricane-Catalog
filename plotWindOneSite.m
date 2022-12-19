@@ -32,7 +32,7 @@ figHeight=3;
 set(hfig,'PaperUnits','inches');
 set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
 figname=('.\assets\Fig7.'); %Fig. 8 in the paper
-print(hfig,[figname,'jpg'],'-r1000','-djpeg');
+print(hfig,[figname,'tif'],'-r1200','-dtiff');
 %% plot good records
 % two peak [157,146,142,137,124,99, 84]
 %          [450,650,950,600,550,450,1000] duration (min)
@@ -62,7 +62,7 @@ for i=[84 151 85]%1:length(seleHurrGood)
     set(hfig,'PaperUnits','inches');
     set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
     figname=strcat('.\assets\Fig',num2str(j),'(a).');
-    print(hfig,[figname,'jpg'],'-r500','-djpeg');
+    print(hfig,[figname,'tif'],'-r1200','-dtiff');
     
     hfig=figure; %track within 250km
     latlim = [36 46];
@@ -83,7 +83,7 @@ for i=[84 151 85]%1:length(seleHurrGood)
     set(hfig,'PaperUnits','inches');
     set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
     figname=strcat('.\assets\Fig',num2str(j),'(b).');
-    print(hfig,[figname,'jpg'],'-r500','-djpeg');
+    print(hfig,[figname,'tif'],'-r1200','-dtiff');
     
     hfig=figure; %time history within 250km
     yyaxis left
@@ -109,7 +109,7 @@ for i=[84 151 85]%1:length(seleHurrGood)
     set(hfig,'PaperUnits','inches');
     set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
     figname=strcat('.\assets\Fig',num2str(j),'(c).');
-    print(hfig,[figname,'jpg'],'-r500','-djpeg');
+    print(hfig,[figname,'tif'],'-r1200','-dtiff');
     
     hfig=figure; %time history within 250km
     yyaxis left
@@ -137,7 +137,7 @@ for i=[84 151 85]%1:length(seleHurrGood)
     set(hfig,'PaperUnits','inches');
     set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
     figname=strcat('.\assets\Fig',num2str(j),'(d).');
-    print(hfig,[figname,'jpg'],'-r500','-djpeg');
+    print(hfig,[figname,'tif'],'-r1200','-dtiff');
     
     j=j+1;
 end
@@ -186,6 +186,6 @@ figHeight=2.3;
 set(hfig,'PaperUnits','inches');
 set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
 figname=strcat('.\assets\Fig',num2str(i+14),'(b).');
-print(hfig,[figname,'jpg'],'-r500','-djpeg');
+print(hfig,[figname,'tif'],'-r1200','-dtiff');
 end
 end

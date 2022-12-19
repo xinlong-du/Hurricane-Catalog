@@ -70,7 +70,7 @@ figHeight=3.5;
 set(hfig,'PaperUnits','inches');
 set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
 figname=('.\assets\Fig2.'); %Fig. 2 in the paper
-print(hfig,[figname,'jpg'],'-r500','-djpeg');
+print(hfig,[figname,'tif'],'-r600','-dtiff');
 
 %% plot hurricane tracks
 hfig=figure;
@@ -96,4 +96,4 @@ figHeight=2.5;
 set(hfig,'PaperUnits','inches');
 set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
 figname=('.\assets\Fig1.'); %Fig. 1 in the paper
-print(hfig,[figname,'jpg'],'-r500','-djpeg');
+print(hfig,[figname,'tif'],'-r1200','-dtiff');

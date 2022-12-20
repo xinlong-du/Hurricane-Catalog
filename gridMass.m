@@ -50,7 +50,7 @@ figHeight=2.5;
 set(hfig,'PaperUnits','inches');
 set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
 figname=('.\assets\Fig8.');
-print(hfig,[figname,'jpg'],'-r500','-djpeg');
+print(hfig,[figname,'tif'],'-r1200','-dtiff');
 %% prepare site properties
 %50-year MRI
 filename = '.\assets\siteProperties.xlsx';

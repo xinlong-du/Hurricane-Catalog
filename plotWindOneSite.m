@@ -46,6 +46,7 @@ for i=[84 151 85]%1:length(seleHurrGood)
     plotWind=seleHurrGood{i};
     
     hfig=figure; %whole track 
+    subplot(2,2,1)
     latlim = [10 70];
     lonlim = [-110 10];
     worldmap(latlim,lonlim)
@@ -55,16 +56,11 @@ for i=[84 151 85]%1:length(seleHurrGood)
     hold on
     plotm(plotWind.latIn,plotWind.lonIn,'r')
     plotm(latC,lonC,'b')
+    title('(a)')
+    set(gca,'FontSize',8,'FontName','Times New Roman')
     setm(gca,'FontSize',8,'FontName','Times New Roman')
-    % save histogram
-    figWidth=3.5;
-    figHeight=2.5;
-    set(hfig,'PaperUnits','inches');
-    set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
-    figname=strcat('.\assets\Fig',num2str(j),'(a).');
-    print(hfig,[figname,'tif'],'-r1200','-dtiff');
     
-    hfig=figure; %track within 250km
+    subplot(2,2,2) %track within 250km
     latlim = [36 46];
     lonlim = [-80 -60];
     worldmap(latlim,lonlim)
@@ -75,17 +71,12 @@ for i=[84 151 85]%1:length(seleHurrGood)
     plotm(plotWind.latIn250,plotWind.lonIn250,'r')
     plotm(latC,lonC,'b')
     plotm(latLoc,lonLoc,'b.')
+    title('(b)')
+    set(gca,'FontSize',8,'FontName','Times New Roman')
     setm(gca,'FontSize',8,'FontName','Times New Roman')
     gridm('mlinelocation',5,'MLabelLocation',5,'plinelocation',5,'PLabelLocation',5)
-    % save histogram
-    figWidth=3.5;
-    figHeight=2.5;
-    set(hfig,'PaperUnits','inches');
-    set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
-    figname=strcat('.\assets\Fig',num2str(j),'(b).');
-    print(hfig,[figname,'tif'],'-r1200','-dtiff');
     
-    hfig=figure; %time history within 250km
+    subplot(2,2,3) %time history within 250km
     yyaxis left
     plot(plotWind.tIn250,plotWind.VIn250)
     xlabel('Time (min)','FontSize',8,'FontName','Times New Roman')
@@ -101,17 +92,10 @@ for i=[84 151 85]%1:length(seleHurrGood)
         legend({'Wind speed','Wind dir.'},'FontSize',8,'FontName','Times New Roman','Location','southwest')
     end
     legend('boxoff')
-    %title('Time history with in 250km (Polar)')
+    title('(c)')
     set(gca,'FontSize',8,'FontName','Times New Roman')
-    % save histogram
-    figWidth=3.5;
-    figHeight=2.0;
-    set(hfig,'PaperUnits','inches');
-    set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
-    figname=strcat('.\assets\Fig',num2str(j),'(c).');
-    print(hfig,[figname,'tif'],'-r1200','-dtiff');
     
-    hfig=figure; %time history within 250km
+    subplot(2,2,4) %time history within 250km
     yyaxis left
     plot(plotWind.tIn250,plotWind.VIn250N)
     xlabel('Time (min)','FontSize',8,'FontName','Times New Roman')
@@ -129,14 +113,14 @@ for i=[84 151 85]%1:length(seleHurrGood)
         legend({'North dir.','East dir.'},'FontSize',8,'FontName','Times New Roman','Location','northwest')
     end
     legend('boxoff')
-    %title('Time history with in 250km (Cartesian)')
+    title('(d)')
     set(gca,'FontSize',8,'FontName','Times New Roman')
     % save histogram
-    figWidth=3.5;
-    figHeight=2.0;
+    figWidth=7.6;
+    figHeight=5.0;
     set(hfig,'PaperUnits','inches');
     set(hfig,'PaperPosition',[0 0 figWidth figHeight]);
-    figname=strcat('.\assets\Fig',num2str(j),'(d).');
+    figname=strcat('.\assets\Fig',num2str(j),'.');
     print(hfig,[figname,'tif'],'-r1200','-dtiff');
     
     j=j+1;

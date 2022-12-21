@@ -56,7 +56,7 @@ for i=[84 151 85]%1:length(seleHurrGood)
     hold on
     plotm(plotWind.latIn,plotWind.lonIn,'r')
     plotm(latC,lonC,'b')
-    title('(a)')
+    title('(a)', 'Units', 'normalized', 'Position', [0.5, -0.3, 0])
     set(gca,'FontSize',8,'FontName','Times New Roman')
     setm(gca,'FontSize',8,'FontName','Times New Roman')
     
@@ -71,7 +71,7 @@ for i=[84 151 85]%1:length(seleHurrGood)
     plotm(plotWind.latIn250,plotWind.lonIn250,'r')
     plotm(latC,lonC,'b')
     plotm(latLoc,lonLoc,'b.')
-    title('(b)')
+    title('(b)', 'Units', 'normalized', 'Position', [0.5, -0.3, 0])
     set(gca,'FontSize',8,'FontName','Times New Roman')
     setm(gca,'FontSize',8,'FontName','Times New Roman')
     gridm('mlinelocation',5,'MLabelLocation',5,'plinelocation',5,'PLabelLocation',5)
@@ -92,7 +92,7 @@ for i=[84 151 85]%1:length(seleHurrGood)
         legend({'Wind speed','Wind dir.'},'FontSize',8,'FontName','Times New Roman','Location','southwest')
     end
     legend('boxoff')
-    title('(c)')
+    title('(c)', 'Units', 'normalized', 'Position', [0.5, -0.3, 0])
     set(gca,'FontSize',8,'FontName','Times New Roman')
     
     subplot(2,2,4) %time history within 250km
@@ -113,7 +113,7 @@ for i=[84 151 85]%1:length(seleHurrGood)
         legend({'North dir.','East dir.'},'FontSize',8,'FontName','Times New Roman','Location','northwest')
     end
     legend('boxoff')
-    title('(d)')
+    title('(d)', 'Units', 'normalized', 'Position', [0.5, -0.3, 0])
     set(gca,'FontSize',8,'FontName','Times New Roman')
     % save histogram
     figWidth=7.6;
